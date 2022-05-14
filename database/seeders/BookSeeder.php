@@ -22,7 +22,7 @@ class BookSeeder extends Seeder
                 'title' => $faker->sentence,
                 'description' => $faker->text,
                 'publication_date' => $faker->dateTimeBetween('-30 years','now'),
-                'num_of_copies' => 3,
+                'copies_owned' => 3,
                 'category_id' => 1
             ]);
         }

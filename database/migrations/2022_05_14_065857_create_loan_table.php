@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('user_id')->nullable();
             $table->date('loan_date');
             $table->date('returned_date');
+
             $table->timestamps();
         });
     }
