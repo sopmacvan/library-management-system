@@ -17,10 +17,9 @@ class BookSeeder extends Seeder
     public function run()
     {
         $faker = \Faker\Factory::create();
-
         for ($i=0; $i<100; $i++) {
             Book::create([
-                'title' => $faker->title,
+                'title' => $faker->sentence,
                 'description' => $faker->text,
                 'publication_date' => $faker->dateTimeBetween('-30 years','now'),
                 'num_of_copies' => 3,
