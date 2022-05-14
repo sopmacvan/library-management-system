@@ -1,0 +1,31 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Book;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+
+class BookSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = \Faker\Factory::create();
+
+        for ($i=0; $i<100; $i++) {
+            Book::create([
+                'title' => $faker->title,
+                'description' => $faker->text,
+                'publication_date' => $faker->dateTimeBetween('-30 years','now'),
+                'num_of_copies' => 3,
+                'category_id' => 1
+            ]);
+        }
+    }
+}
