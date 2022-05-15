@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fine', function (Blueprint $table) {
+        Schema::create('fines', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->nullable();
             $table->integer('loan_id')->nullable();
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fine');
+        Schema::dropIfExists('fines');
     }
 };
