@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +16,28 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
+
+Auth::routes();
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::middleware(['user'])->group(function () {
+    //authenticates user
+    //return to auth.login if not authenticated
+    //return to admin.home if admin
+    //located in app\Http\Middleware\EnsureUserIsNonAdmin
+    Route::get('/user', [UserController::class, 'index']);
+
+});
+
+Route::middleware(['admin'])->group(function () {
+    //authenticates user
+    //return to auth.login if not authenticated
+    //return to user.home if not admin
+    //located in app\Http\Middleware\EnsureUserIsAdmin
+    Route::get('/admin', [AdminController::class, 'index']);
+
+});
+
