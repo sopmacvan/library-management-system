@@ -22,14 +22,12 @@ Route::get('/', function () {
 Auth::routes();
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
 Route::middleware(['user'])->group(function () {
     //authenticates user
     //return to auth.login if not authenticated
     //return to admin.home if admin
     //located in app\Http\Middleware\EnsureUserIsNonAdmin
     Route::get('/user', [UserController::class, 'index']);
-
 });
 
 Route::middleware(['admin'])->group(function () {
