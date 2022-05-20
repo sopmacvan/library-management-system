@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,28 +16,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Auth::routes();
 Route::get('/', function () {
-    return view('auth.login');
+    return redirect('login');
 });
 
-Auth::routes();
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
-Route::middleware(['user'])->group(function () {
-    //authenticates user
-    //return to auth.login if not authenticated
-    //return to admin.home if admin
-    //located in app\Http\Middleware\EnsureUserIsNonAdmin
+Route::middleware(['role:user'])->group(function () {
+    //    if user has the role 'user', he can access these routes.
+    //    put user routes here.
     Route::get('/user', [UserController::class, 'index']);
 
 });
-
-Route::middleware(['admin'])->group(function () {
-    //authenticates user
-    //return to auth.login if not authenticated
-    //return to user.home if not admin
-    //located in app\Http\Middleware\EnsureUserIsAdmin
+Route::middleware(['role:admin'])->group(function () {
+    //    if user has the role 'admin', he can access these routes.
+    //    put admin routes here.
     Route::get('/admin', [AdminController::class, 'index']);
 
 });

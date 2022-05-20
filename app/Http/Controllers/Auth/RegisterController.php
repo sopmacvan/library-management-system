@@ -35,15 +35,13 @@ class RegisterController extends Controller
 
     public function redirectTo()
     {
-        switch (Auth::user()->isAdmin()) {
-            case 0:
+        switch (Auth::user()->role()) {
+            case 'user':
                 $this->redirectTo = '/user';
                 return $this->redirectTo;
-                break;
-            case 1:
+            case 'admin':
                 $this->redirectTo = '/admin';
                 return $this->redirectTo;
-                break;
             default:
                 $this->redirectTo = '/login';
                 return $this->redirectTo;

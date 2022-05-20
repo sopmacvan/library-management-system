@@ -6,7 +6,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EnsureUserIsAdmin
+
+class CheckUserRole
 {
     /**
      * Handle an incoming request.
@@ -15,18 +16,18 @@ class EnsureUserIsAdmin
      * @param \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $role)
     {
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect('login');
             //return to login if not authenticated
         }
 
-        if (!Auth::user()->isAdmin()) {
-            return redirect()->route('user');
-            //return to user.home if not admin
-        }
+        if (Auth::user()->role() == $role)
+//            if user has the appropriate role, continue
+            return $next($request);
 
-        return $next($request);
+        return back();
+
     }
 }
