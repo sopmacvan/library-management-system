@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
@@ -31,21 +30,16 @@ class RegisterController extends Controller
      * @var string
      */
 //    protected $redirectTo = RouteServiceProvider::HOME;
-    protected $redirectTo;
+//    protected $redirectTo;
 
     public function redirectTo()
     {
-        switch (Auth::user()->role()) {
-            case 'user':
-                $this->redirectTo = '/user';
-                return $this->redirectTo;
-            case 'admin':
-                $this->redirectTo = '/admin';
-                return $this->redirectTo;
-            default:
-                $this->redirectTo = '/login';
-                return $this->redirectTo;
-        }
+        $role = Auth::user()->role();
+        return match ($role) {
+            'user' => '/user',
+            'admin' => '/admin',
+            default => '/login',
+        };
     }
 
     /**
