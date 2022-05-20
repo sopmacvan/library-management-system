@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 
-class BookSeeder extends Seeder
+class BooksSeeder extends Seeder
 {
     /**
      * Run the database seeds.
