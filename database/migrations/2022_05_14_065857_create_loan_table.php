@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('book_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->date('loan_date');
+            $table->date('expected_return_date');
             $table->date('returned_date');
 
             $table->timestamps();
