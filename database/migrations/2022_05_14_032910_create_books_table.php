@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->date('publication_date');
             $table->integer('copies_owned');
+            $table->integer('remaining_copies');
             $table->integer('category_id')->nullable();
             $table->timestamps();
         });

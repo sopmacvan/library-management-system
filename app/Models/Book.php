@@ -14,6 +14,7 @@ class Book extends Model
         'description',
         'publication_date',
         'copies_owned',
+        'remaining_copies',
         'category_id'
     ];
 }

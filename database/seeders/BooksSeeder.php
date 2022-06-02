@@ -26,6 +26,7 @@ class BooksSeeder extends Seeder
                 'description' => $faker->text,
                 'publication_date' => $faker->dateTimeBetween('-30 years','now'),
                 'copies_owned' => 3,
+                'remaining_copies' => 3,
                 'category_id' => 1
             ]);
         }
