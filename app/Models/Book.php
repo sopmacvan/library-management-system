@@ -13,7 +13,7 @@ class Book extends Model
         'title',
         'description',
         'publication_date',
-        'num_of_copies',
+        'copies_owned',
         'category_id'
     ];
 }
