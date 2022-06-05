@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
@@ -10,7 +11,7 @@
                     {{--                <div class="panel-body">--}}
                     {{--                    This is Books Page--}}
                     {{--                </div>--}}
-                    <table>
+                    <table id="books_table">
                         <thead>
                         <tr>
                             <th>id</th>
@@ -41,4 +42,9 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#books_table').DataTable();
+        });
+    </script>
 @endsection
