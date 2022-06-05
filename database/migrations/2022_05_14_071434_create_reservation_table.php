@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('book_id');
             $table->integer('user_id');
             $table->date('reservation_date');
-            $table->integer('reservation_status_id')->nullable();
+            $table->integer('reservation_status_id')->nullable()->default(1);
             $table->timestamps();
         });
     }

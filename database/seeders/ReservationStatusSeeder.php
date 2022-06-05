@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Book;
+use App\Models\ReservationStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,12 +19,11 @@ class ReservationStatusSeeder extends Seeder
     {
         DB::table('reservation_statuses')->truncate();
 
-        $faker = \Faker\Factory::create();
-        Book::create([
-            'status_value' => 'awaiting claim',
-        ]);
-        Book::create([
-            'status_value' => 'claimed',
-        ]);
+        $statuses = array('awaiting claim', 'claimed', 'cancelled', 'expired');
+        foreach ($statuses as $status) {
+            ReservationStatus::create([
+                'status_value' => $status
+            ]);
+        }
     }
 }

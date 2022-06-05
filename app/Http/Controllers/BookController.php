@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
@@ -18,7 +20,24 @@ class BookController extends Controller
                 'authors.first_name', 'authors.last_name',
                 'categories.category_name')
             ->get();
-//        dd($books);
         return view('user.books', compact('books'));
+    }
+
+    public function reserveBook(Request $request)
+    {
+        $book_id = $request->id;
+        $remaining_copy = DB::table('users')->where('id', $book_id)->value('remaining_copies');
+
+        if ($remaining_copy > 0) {
+            DB::table('books')->decrement('remaining_copies', 1, ['id' => $book_id]);
+            DB::table('reservations')->insert([
+                'book_id' => $book_id,
+                'user_id' => Auth::user()->getId(),
+                'reservation_date' => Carbon::now()->format('Y-m-d'),
+            ]);
+        }
+//        print session message "book reserved"
+
+
     }
 }

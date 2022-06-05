@@ -29,6 +29,7 @@ Route::middleware(['role:user'])->group(function () {
     //    put user routes here.
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/books', [BookController::class, 'showBooks']);
+    Route::get('/reserve-book/{id}', [BookController::class, 'reserveBook']);
 
 });
 Route::middleware(['role:admin'])->group(function () {
