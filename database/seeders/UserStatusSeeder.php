@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Book;
+use App\Models\UserStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,13 +18,13 @@ class UserStatusSeeder extends Seeder
     {
         DB::table('user_statuses')->truncate();
 
-        $faker = \Faker\Factory::create();
-        Book::create([
-            'status_value' => 'active',
-        ]);
-        Book::create([
-            'status_value' => 'inactive',
-        ]);
+        $statuses = array('active', 'inactive');
+        foreach ($statuses as $status) {
+            UserStatus::create([
+                'status_value' => $status,
+            ]);
+        }
+
     }
 
 }
