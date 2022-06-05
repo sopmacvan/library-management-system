@@ -24,10 +24,8 @@ class BooksSeeder extends Seeder
 
         $faker = \Faker\Factory::create();
         $category_count = Category::count();
-        $author_count = Author::count();
-        for ($book_id=1; $book_id<70; $book_id++) {
+        for ($i=0; $i<69; $i++) {
             $category_id = rand(1,$category_count);
-            $author_id = rand(1,$author_count);
 
             Book::create([
                 'title' => $faker->sentence,
@@ -38,10 +36,7 @@ class BooksSeeder extends Seeder
                 'category_id' => $category_id
             ]);
 
-            BookAuthor::create([
-                'book_id' => $book_id,
-                'author_id' => $author_id
-            ]);
+
 
         }
     }

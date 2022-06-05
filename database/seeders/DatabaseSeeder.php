@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\BookAuthor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,9 +20,10 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             UserStatusSeeder::class,
 
-            AuthorSeeder::class,
             CategorySeeder::class,
+            AuthorSeeder::class,
             BooksSeeder::class,
+            BookAuthorSeeder::class
 
         ]);
     }
