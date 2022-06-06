@@ -29,13 +29,16 @@ Route::middleware(['role:user'])->group(function () {
     //    put user routes here.
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/books', [UserController::class, 'showBooks']);
+    Route::get('/reserved-books', [UserController::class, 'showReservedBooks']);
     Route::get('/reserve-book/{id}', [UserController::class, 'reserveBook']);
+    Route::get('/cancel-book-reservation/{id}', [UserController::class, 'cancelBookReservation']);
 
 });
 Route::middleware(['role:admin'])->group(function () {
     //    if user has the role 'admin', he can access these routes.
     //    put admin routes here.
     Route::get('/admin', [AdminController::class, 'index']);
+    Route::get('/manage-reserved-books', [AdminController::class, 'showReservedBooks']);
 
 });
 

@@ -23,29 +23,26 @@
                         </div>
                     @endif
 
-                    <button id="reserve_btn">Reserve Book</button>
-                    <table id="books_table">
+                    <button id="cancel_btn">Cancel Reservation</button>
+                    <table id="reserved_books_table">
                         <thead>
                         <tr>
                             <th>id</th>
+                            <th>book id</th>
                             <th>title</th>
-                            <th>author</th>
-                            <th>category</th>
-                            <th>publication date</th>
-                            <th>copies owned</th>
-                            <th>remaining copies</th>
+                            <th>reservation date</th>
+                            <th>status</th>
+
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($books as $book)
+                        @foreach($reserved_books as $book)
                             <tr>
                                 <td>{{$book->id}}</td>
+                                <td>{{$book->book_id}}</td>
                                 <td>{{$book->title}}</td>
-                                <td>{{$book->first_name.' '.$book->last_name}}</td>
-                                <td>{{$book->category_name}}</td>
-                                <td>{{$book->publication_date}}</td>
-                                <td>{{$book->copies_owned}}</td>
-                                <td>{{$book->remaining_copies}}</td>
+                                <td>{{$book->reservation_date}}</td>
+                                <td>{{$book->status_value}}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -59,9 +56,9 @@
     <script>
         $(document).ready(function () {
             //apply datatables stuffs (search engine, pages, limit)
-            var table = $('#books_table').DataTable();
+            var table = $('#reserved_books_table').DataTable();
 
-            $('#books_table tbody').on('click', 'tr', function () {
+            $('#reserved_books_table tbody').on('click', 'tr', function () {
                 //mark or unmark as selected, highlights row
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
@@ -72,11 +69,11 @@
                 }
             });
 
-            $('#reserve_btn').click(function () {
+            $('#cancel_btn').click(function () {
                 //get row data, you can access it like an array
-                const row_data = table.row('.selected').data();
-                //redirect to /reserve-book/{id}
-                window.location.href = `/reserve-book/${row_data[0]}`;
+                const row_data = table.row( '.selected' ).data();
+                //redirect to /cancel-book-reservation/{id}
+                window.location.href = `/cancel-book-reservation/${row_data[0]}`;
             });
         });
     </script>
