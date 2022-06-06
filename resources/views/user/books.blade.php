@@ -75,8 +75,8 @@
             $('#reserve_btn').click(function () {
                 //get row data, you can access it like an array
                 const row_data = table.row('.selected').data();
-                //redirect to /reserve-book/{id}
-                window.location.href = `/reserve-book/${row_data[0]}`;
+                //redirect to /create-book-reservation/{id}
+                window.location.href = `/create-book-reservation/${row_data[0]}`;
             });
         });
     </script>

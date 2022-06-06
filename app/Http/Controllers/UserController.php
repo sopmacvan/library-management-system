@@ -42,12 +42,12 @@ class UserController extends Controller
                 'reservations.id', 'reservations.book_id', 'reservations.reservation_date',
                 'reservation_statuses.status_value')
             ->where('reservations.user_id', '=', $user_id)
-            ->where()
+            ->whereIn('reservations.reservation_status_id', [1,4])
             ->get();
         return view('user.reserved-books', compact('reserved_books'));
     }
 
-    public function reserveBook(Request $request)
+    public function createBookReservation(Request $request)
     {
         $user_id = Auth::user()->getId();
         $book_id = $request->id;
@@ -95,11 +95,11 @@ class UserController extends Controller
     {
         $reservation_id = $request->id;
         $reservation = Reservation::find($reservation_id);
-//        if reservation is already accepted, return
+//        if reservation status is already accepted, return
 //        else, update status to cancelled
 
         if ($reservation->reservation_status_id != 1) {
-            $request->session()->flash('error', 'You may only cancel ongoing book reservations.');
+            $request->session()->flash('error', 'You may only cancel book reservations that are accepted.');
             return redirect()->back();
         }
 

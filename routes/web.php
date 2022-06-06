@@ -30,7 +30,7 @@ Route::middleware(['role:user'])->group(function () {
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/books', [UserController::class, 'showBooks']);
     Route::get('/reserved-books', [UserController::class, 'showReservedBooks']);
-    Route::get('/reserve-book/{id}', [UserController::class, 'reserveBook']);
+    Route::get('/create-book-reservation/{id}', [UserController::class, 'createBookReservation']);
     Route::get('/cancel-book-reservation/{id}', [UserController::class, 'cancelBookReservation']);
 
 });
@@ -39,6 +39,7 @@ Route::middleware(['role:admin'])->group(function () {
     //    put admin routes here.
     Route::get('/admin', [AdminController::class, 'index']);
     Route::get('/manage-reserved-books', [AdminController::class, 'showReservedBooks']);
+    Route::get('/complete-book-reservation/{id}', [AdminController::class, 'completeBookReservation']);
 
 });
 
