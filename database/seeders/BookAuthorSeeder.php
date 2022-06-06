@@ -33,7 +33,7 @@ class BookAuthorSeeder extends Seeder
             $i++;
         }
         while ($i <= $books_count) {
-//            assign book to random author
+//            assign remaining book to random author
             BookAuthor::create([
                 'book_id' => $i,
                 'author_id' => rand(1, $author_count)

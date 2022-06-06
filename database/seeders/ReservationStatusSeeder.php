@@ -19,7 +19,7 @@ class ReservationStatusSeeder extends Seeder
     {
         DB::table('reservation_statuses')->truncate();
 
-        $statuses = array('awaiting claim', 'claimed', 'cancelled', 'expired');
+        $statuses = array('accepted', 'claimed', 'cancelled', 'expired');
         foreach ($statuses as $status) {
             ReservationStatus::create([
                 'status_value' => $status

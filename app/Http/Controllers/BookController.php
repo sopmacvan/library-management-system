@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use App\Models\Reservation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,18 +28,36 @@ class BookController extends Controller
     public function reserveBook(Request $request)
     {
         $book_id = $request->id;
-        $remaining_copy = DB::table('users')->where('id', $book_id)->value('remaining_copies');
+        $user_id = Auth::user()->getId();
+        $reservation_record = DB::table('reservations')
+            ->where('book_id', $book_id)
+            ->where('user_id', $user_id)
+            ->first();
+
+        if (!empty($reservation_record)) {
+//            check if user already reserved the book
+            $request->session()->flash('error', 'You already reserved this book.');
+
+            return redirect()->back();
+        }
+        $remaining_copy = DB::table('books')->where('id', $book_id)->value('remaining_copies');
+
+//        maybe check if user has exceeded borrow + reservation limit of 3
 
         if ($remaining_copy > 0) {
-            DB::table('books')->decrement('remaining_copies', 1, ['id' => $book_id]);
-            DB::table('reservations')->insert([
+//            check if there are still copies remaining
+            Book::find($book_id)->decrement('remaining_copies');
+            Reservation::create([
                 'book_id' => $book_id,
-                'user_id' => Auth::user()->getId(),
+                'user_id' => $user_id,
                 'reservation_date' => Carbon::now()->format('Y-m-d'),
             ]);
+            $request->session()->flash('message', 'Book has been reserved successfully.');
+        } else {
+            $request->session()->flash('error', 'No more copies remaining.');
         }
-//        print session message "book reserved"
 
+        return redirect()->back();
 
     }
 }
