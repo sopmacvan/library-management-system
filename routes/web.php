@@ -43,3 +43,9 @@ Route::middleware(['role:admin'])->group(function () {
 
 });
 
+Route::middleware(['auth'])->group(function () {
+    //    if user is authenticated, he can access these routes.
+    //    put default routes here.
+    Route::get('/cancel-book-reservation/{id}', [UserController::class, 'cancelBookReservation']);
+
+});

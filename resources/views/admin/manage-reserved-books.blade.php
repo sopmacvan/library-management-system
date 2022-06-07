@@ -24,7 +24,7 @@
                     @endif
 
                     <button id="claim_btn">Mark as Claimed</button>
-{{--                    <button id="cancel_btn">Cancel Reservation</button>--}}
+                    <button id="cancel_btn">Cancel Reservation</button>
                     <table id="reserved_books_table">
                         <thead>
                         <tr>
@@ -74,11 +74,11 @@
                 }
             });
 
-            // $('#cancel_btn').click(function () {
-            //     //get row data, you can access it like an array
-            //     const row_data = table.row( '.selected' ).data();
-            //     window.location.href = `/cancel-book-reservation/${row_data[0]}`;
-            // });
+            $('#cancel_btn').click(function () {
+                //get row data, you can access it like an array
+                const row_data = table.row( '.selected' ).data();
+                window.location.href = `/cancel-book-reservation/${row_data[0]}`;
+            });
             $('#claim_btn').click(function () {
                 //get row data, you can access it like an array
                 const row_data = table.row( '.selected' ).data();
