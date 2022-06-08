@@ -27,25 +27,24 @@ Route::get('/', function () {
 Route::middleware(['role:user'])->group(function () {
     //    if user has the role 'user', he can access these routes.
     //    put user routes here.
-    Route::get('/user', [UserController::class, 'index']);
-    Route::get('/books', [UserController::class, 'showBooks']);
-    Route::get('/reserved-books', [UserController::class, 'showReservedBooks']);
-    Route::get('/create-book-reservation/{id}', [UserController::class, 'createBookReservation']);
-    Route::get('/cancel-book-reservation/{id}', [UserController::class, 'cancelBookReservation']);
+    Route::get('/user', [UserController::class, 'index'])->name('user');
+    Route::get('/books', [UserController::class, 'showBooks'])->name('books');
+    Route::get('/reserved-books', [UserController::class, 'showReservedBooks'])->name('reserved-books');
+    Route::get('/create-book-reservation/{id}', [UserController::class, 'createBookReservation'])->name('create-book-reservation');
 
 });
 Route::middleware(['role:admin'])->group(function () {
     //    if user has the role 'admin', he can access these routes.
     //    put admin routes here.
-    Route::get('/admin', [AdminController::class, 'index']);
-    Route::get('/manage-reserved-books', [AdminController::class, 'showReservedBooks']);
-    Route::get('/complete-book-reservation/{id}', [AdminController::class, 'completeBookReservation']);
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+    Route::get('/manage-reserved-books', [AdminController::class, 'showReservedBooks'])->name('manage-reserved-books');
+    Route::get('/complete-book-reservation/{id}', [AdminController::class, 'completeBookReservation'])->name('complete-book-reservation');
 
 });
 
 Route::middleware(['auth'])->group(function () {
     //    if user is authenticated, he can access these routes.
     //    put default routes here.
-    Route::get('/cancel-book-reservation/{id}', [UserController::class, 'cancelBookReservation']);
+    Route::get('/cancel-book-reservation/{id}', [UserController::class, 'cancelBookReservation'])->name('cancel-book-reservation');
 
 });
