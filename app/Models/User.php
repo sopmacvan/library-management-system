@@ -44,8 +44,12 @@ class User extends Authenticatable
 
     public function role()
     {
-//        dd($this->belongsTo(UserRole::class, 'user_role_id')->first()->role_value);
         return $this->belongsTo(UserRole::class, 'user_role_id');
+
+    }
+    public function getRole()
+    {
+        return $this->role->role_value;
     }
 
 

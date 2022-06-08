@@ -30,7 +30,7 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
-        $role = Auth::user()->role();
+        $role = Auth::user()->getRole();
         return match ($role) {
             'user' => '/user',
             'admin' => '/admin',
