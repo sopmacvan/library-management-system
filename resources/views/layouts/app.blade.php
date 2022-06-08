@@ -35,62 +35,79 @@
             <span class="navbar-toggler-icon">
             </span>
     </button>
-{{--    <!-- navbar links -->--}}
-{{--    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">--}}
-{{--        <div class="navbar-nav">--}}
-{{--            <a class="nav-item nav-link--}}
-{{--                    active" href="#">--}}
-{{--                Home--}}
-{{--            </a>--}}
-{{--            <a class="nav-item nav-link" href="#">Features</a>--}}
-{{--            <a class="nav-item nav-link" href="#">Price</a>--}}
-{{--            <a class="nav-item nav-link" href="#">About</a>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    {{--    <!-- navbar links -->--}}
+    {{--    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">--}}
+    {{--        <div class="navbar-nav">--}}
+    {{--            <a class="nav-item nav-link--}}
+    {{--                    active" href="#">--}}
+    {{--                Home--}}
+    {{--            </a>--}}
+    {{--            <a class="nav-item nav-link" href="#">Features</a>--}}
+    {{--            <a class="nav-item nav-link" href="#">Price</a>--}}
+    {{--            <a class="nav-item nav-link" href="#">About</a>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 </nav>
 <!-- This container contains the sidebar
         and main content of the page -->
 <!-- h-100 takes the full height of the body-->
-<div class="container-fluid h-100">
-    <div class="row h-100">
-        <div class="col-2" id="green">
-            <h4>Welcome, {{ Auth::user()->name }}
-            </h4>
-            <!-- Navigation links in sidebar-->
-            @if (Auth::user()->getRole() == 'user')
-                <a class="nav-link" href="{{ route('user') }}">{{ __('Home') }}</a>
-                <a class="nav-link" href="{{ route('books') }}">{{ __('Books') }}</a>
-                <a class="nav-link" href="{{ route('login') }}">{{ __('Borrowed Books') }}</a>
-                <a class="nav-link" href="{{ route('reserved-books') }}">{{ __('Reserved Books') }}</a>
-                <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>
-            @endif
-            @if(Auth::user()->getRole() == 'admin')
-                <a class="nav-link" href="{{ route('admin') }}">{{ __('Home') }}</a>
-                <a class="nav-link" href="{{ route('login') }}">{{ __('Manage Borrowed Books') }}</a>
-                <a class="nav-link"
-                   href="{{ route('manage-reserved-books') }}">{{ __('Manage Reserved Books') }}</a>
-                <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>
-            @endif
-            <a class="nav-link " href="{{ route('logout') }}"
-               onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                {{ __('Logout') }}
-            </a>
+@guest
+    <ul class="nav-item fixe">
+        @if (Route::has('login'))
+            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+        @endif
 
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-            </form>
-        </div>
-        <!--Contains the main content
-                of the webpage-->
-        <div class="col-10" style="text-align: justify;">
-            <main class="py-4">
-                @yield('content')
-            </main>
+        @if (Route::has('register'))
+            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+        @endif
+    </ul>
+
+@else
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col-2" id="green">
+                <h4>Welcome, {{ Auth::user()->name }}
+                </h4>
+                <!-- Navigation links in sidebar-->
+                @if (Auth::user()->getRole() == 'user')
+                    <a class="nav-link" href="{{ route('user') }}">{{ __('Home') }}</a>
+                    <a class="nav-link" href="{{ route('books') }}">{{ __('Books') }}</a>
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('Borrowed Books') }}</a>
+                    <a class="nav-link" href="{{ route('reserved-books') }}">{{ __('Reserved Books') }}</a>
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>
+                @endif
+                @if(Auth::user()->getRole() == 'admin')
+                    <a class="nav-link" href="{{ route('admin') }}">{{ __('Home') }}</a>
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('Manage Borrowed Books') }}</a>
+                    <a class="nav-link"
+                       href="{{ route('manage-reserved-books') }}">{{ __('Manage Reserved Books') }}</a>
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>
+                @endif
+                <a class="nav-link " href="{{ route('logout') }}"
+                   onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                    {{ __('Logout') }}
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </div>
+            <!--Contains the main content
+                    of the webpage-->
+            <div class="col-10" style="text-align: justify;">
+                <main class="py-4">
+                    @yield('content')
+                </main>
+            </div>
         </div>
     </div>
-</div>
+@endguest
+
+@yield('auth_content')
+
 </body>
+
 {{--<body>--}}
 
 
@@ -154,7 +171,7 @@
 {{--                                @csrf--}}
 {{--                            </form>--}}
 {{--                        </li>--}}
-{{--                    --}}
+
 {{--                        <li class="nav-item dropdown">--}}
 {{--                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"--}}
 {{--                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>--}}
