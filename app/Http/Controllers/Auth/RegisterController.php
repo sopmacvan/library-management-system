@@ -35,7 +35,6 @@ class RegisterController extends Controller
     public function redirectTo()
     {
         $role = Auth::user()->role();
-        dd($role);
         return match ($role) {
             'user' => '/user',
             'admin' => '/admin',
