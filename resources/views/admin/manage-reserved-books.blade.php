@@ -24,7 +24,7 @@
                     @endif
 
                     <button id="claim_btn">Mark as Claimed</button>
-{{--                    <button id="cancel_btn">Cancel Reservation</button>--}}
+                    <button id="cancel_btn">Cancel Reservation</button>
                     <table id="reserved_books_table">
                         <thead>
                         <tr>
@@ -61,7 +61,10 @@
     <script>
         $(document).ready(function () {
             //apply datatables stuffs (search engine, pages, limit)
-            var table = $('#reserved_books_table').DataTable();
+            var table = $('#reserved_books_table').DataTable({
+                "scrollY": "450px",
+
+            });
 
             $('#reserved_books_table tbody').on('click', 'tr', function () {
                 //mark or unmark as selected, highlights row
@@ -74,11 +77,11 @@
                 }
             });
 
-            // $('#cancel_btn').click(function () {
-            //     //get row data, you can access it like an array
-            //     const row_data = table.row( '.selected' ).data();
-            //     window.location.href = `/cancel-book-reservation/${row_data[0]}`;
-            // });
+            $('#cancel_btn').click(function () {
+                //get row data, you can access it like an array
+                const row_data = table.row( '.selected' ).data();
+                window.location.href = `/cancel-book-reservation/${row_data[0]}`;
+            });
             $('#claim_btn').click(function () {
                 //get row data, you can access it like an array
                 const row_data = table.row( '.selected' ).data();
