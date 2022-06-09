@@ -29,7 +29,7 @@ class ConfirmPasswordController extends Controller
 //    protected $redirectTo = RouteServiceProvider::HOME;
     public function redirectTo()
     {
-        $role = Auth::user()->role();
+        $role = Auth::user()->getRole();
         return match ($role) {
             'user' => '/user',
             'admin' => '/admin',

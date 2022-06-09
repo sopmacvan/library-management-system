@@ -34,12 +34,14 @@ class RegisterController extends Controller
 
     public function redirectTo()
     {
-        $role = Auth::user()->role();
-        return match ($role) {
-            'user' => '/user',
-            'admin' => '/admin',
-            default => '/login',
-        };
+        return '/user';
+
+//        $role = Auth::user()->getRole();
+//        return match ($role) {
+//            'user' => '/user',
+//            'admin' => '/admin',
+//            default => '/login',
+//        };
     }
 
     /**

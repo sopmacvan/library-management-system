@@ -59,7 +59,10 @@
     <script>
         $(document).ready(function () {
             //apply datatables stuffs (search engine, pages, limit)
-            var table = $('#books_table').DataTable();
+            var table = $('#books_table').DataTable({
+                "scrollY": "450px",
+
+            });
 
             $('#books_table tbody').on('click', 'tr', function () {
                 //mark or unmark as selected, highlights row
