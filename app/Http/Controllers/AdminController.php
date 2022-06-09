@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Loan;
 use App\Models\Reservation;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,40 @@ class AdminController extends Controller
             ->whereIn('reservations.reservation_status_id', [1])
             ->get();
         return view('admin.manage-reserved-books', compact('reserved_books'));
+    }
+
+    public function showUsers()
+    {
+        $users = DB::table('users')
+            ->join('user_statuses', 'users.user_status_id', '=', 'user_statuses.id')
+            ->select(
+                'users.id', 'users.name', 'users.email', 'users.created_at', 'users.updated_at',
+                'user_statuses.status_value'
+            )->get();
+
+        return view('admin.manage-users', compact('users'));
+
+    }
+
+    public function changeUserStatus(Request $request)
+    {
+        $user_id = $request->id;
+        $user = User::find($user_id);
+        $status = $user->user_status_id;
+
+//        if user status is active, deactivate
+//        else, activate
+        if ($status == 1) {
+            $user->user_status_id = 2;
+            $request->session()->flash('deactivated', "Deactivated user {$user_id} successfully.");
+
+        } else {
+            $user->user_status_id = 1;
+            $request->session()->flash('activated', "Activated user {$user_id} successfully.");
+        }
+        $user->save();
+
+        return redirect()->back();
     }
 
     public function completeBookReservation(Request $request)
