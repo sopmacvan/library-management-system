@@ -37,6 +37,8 @@ Route::middleware(['role:admin'])->group(function () {
     //    if user has the role 'admin', he can access these routes.
     //    put admin routes here.
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+    Route::get('/manage-users', [AdminController::class, 'showUsers'])->name('manage-users');
+    Route::get('/change-user-status/{id}', [AdminController::class, 'changeUserStatus'])->name('change-user-status');
     Route::get('/manage-reserved-books', [AdminController::class, 'showReservedBooks'])->name('manage-reserved-books');
     Route::get('/complete-book-reservation/{id}', [AdminController::class, 'completeBookReservation'])->name('complete-book-reservation');
 
