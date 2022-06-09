@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->id;
     }
+
+    public function isActive()
+    {
+        return $this->user_status_id == 1;
+    }
 }

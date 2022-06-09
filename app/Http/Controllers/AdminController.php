@@ -18,6 +18,7 @@ class AdminController extends Controller
 
     public function index()
     {
+
         return view('admin.home');
     }
 
@@ -43,8 +44,10 @@ class AdminController extends Controller
             ->join('user_statuses', 'users.user_status_id', '=', 'user_statuses.id')
             ->select(
                 'users.id', 'users.name', 'users.email', 'users.created_at', 'users.updated_at',
-                'user_statuses.status_value'
-            )->get();
+                'user_statuses.status_value')
+            ->where('users.user_role_id','=','1')
+            ->get();
+
 
         return view('admin.manage-users', compact('users'));
 

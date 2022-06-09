@@ -49,6 +49,12 @@ class UserController extends Controller
 
     public function createBookReservation(Request $request)
     {
+        if (!Auth::user()->isActive()) {
+            $request->session()->flash('error', 'Your account is inactive. Please contact your librarian.');
+
+            return redirect()->back();
+        }
+
         $user_id = Auth::user()->getId();
         $book_id = $request->id;
         $reservation = Reservation::where('book_id', '=', $book_id)
