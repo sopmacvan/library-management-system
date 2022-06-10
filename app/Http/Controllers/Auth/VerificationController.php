@@ -29,12 +29,19 @@ class VerificationController extends Controller
 //    protected $redirectTo = RouteServiceProvider::HOME;
     public function redirectTo()
     {
-        $role = Auth::user()->getRole();
-        return match ($role) {
-            'user' => '/user',
-            'admin' => '/admin',
-            default => '/login',
-        };
+//        $role = Auth::user()->hasRole();
+//        return match ($role) {
+//            'user' => '/user',
+//            'admin' => '/admin',
+//            default => '/login',
+//        };
+        if (Auth::user()->hasRole('user')) {
+            return '/user';
+        }
+        if (Auth::user()->hasRole('admin')) {
+            return '/admin';
+        }
+        return '/login';
     }
     /**
      * Create a new controller instance.

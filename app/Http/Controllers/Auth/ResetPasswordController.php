@@ -29,12 +29,13 @@ class ResetPasswordController extends Controller
 //    protected $redirectTo = RouteServiceProvider::HOME;
     public function redirectTo()
     {
-        $role = Auth::user()->getRole();
-        return match ($role) {
-            'user' => '/user',
-            'admin' => '/admin',
-            default => '/login',
-        };
+        if (Auth::user()->hasRole('user')) {
+            return '/user';
+        }
+        if (Auth::user()->hasRole('admin')) {
+            return '/admin';
+        }
+        return '/login';
     }
 
 }

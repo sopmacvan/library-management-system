@@ -25,13 +25,13 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
 //                return redirect(RouteServiceProvider::HOME);
 
-                $role = Auth::user()->getRole();
-                switch ($role) {
-                    case 'user':
-                        return redirect('/user');
-                    case 'admin':
-                        return redirect('/admin');
+                if (Auth::user()->hasRole('user')) {
+                    return redirect('/user');
                 }
+                if (Auth::user()->hasRole('admin')) {
+                    return redirect('/admin');
+                }
+
 
 
             }

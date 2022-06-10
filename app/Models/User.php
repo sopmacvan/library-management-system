@@ -47,15 +47,9 @@ class User extends Authenticatable
         return $this->belongsTo(UserRole::class, 'user_role_id');
 
     }
-    public function getRole()
+    public function hasRole($role)
     {
-        return $this->role->role_value;
-    }
-
-
-    public function getId()
-    {
-        return $this->id;
+        return $this->role->role_value == $role;
     }
 
     public function isActive()

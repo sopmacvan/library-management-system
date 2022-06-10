@@ -23,7 +23,7 @@ class CheckUserRole
             //return to login if not authenticated
         }
 
-        if (Auth::user()->getRole() == $role)
+        if (Auth::user()->hasRole($role))
 //            if user has the appropriate role, continue
             return $next($request);
 
