@@ -59,6 +59,7 @@ class UserController extends Controller
         $book_id = $request->id;
         $reservation = Reservation::where('book_id', '=', $book_id)
             ->where('user_id', '=', $user_id)
+            ->whereIn('reservation_status_id', array(1,3,4))
             ->first();
 
         $remaining_copy = Book::find($book_id)->remaining_copies;

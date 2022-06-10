@@ -18,7 +18,9 @@ class AdminController extends Controller
 
     public function index()
     {
+        $remaining_copies = Book::sum('remaining_copies');
 
+        dd($remaining_copies);
         return view('admin.home');
     }
 
