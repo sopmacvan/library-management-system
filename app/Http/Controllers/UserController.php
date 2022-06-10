@@ -26,7 +26,7 @@ class UserController extends Controller
             ->whereNull('loans.returned_date')
             ->groupBy('books.id', 'books.title')
             ->orderBy('total', 'DESC')
-            ->limit(4)
+            ->limit(5)
             ->get();
 
         return view('user.home', compact('categories', 'borrowed_books'));
