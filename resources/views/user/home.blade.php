@@ -64,7 +64,7 @@
             data.addColumn('number', 'Borrow Count');
             data.addRows([
                     @foreach($borrowed_books as $book)
-                ["{{ $book->id . ' : ' . $book->title }}", {{ $book->total }}],
+                ["{{ $book->id  . ': ' . substr($book->title, 0,15) . '...'}}", {{ $book->total }}],
                 @endforeach
             ]);
 
