@@ -14,6 +14,12 @@ class UserController extends Controller
 
     public function index()
     {
+        $categories = DB::table('categories')
+            ->leftJoin('books', 'categories.id', '=', 'books.category_id')
+            ->select('categories.category_name', DB::raw('count(1) as total'))
+            ->groupBy('categories.category_name')
+            ->get();
+
         return view('user.home');
     }
 
