@@ -38,7 +38,7 @@
             //     ['Sleep', 7]
             // ]);
             var data = google.visualization.arrayToDataTable([
-                ['Book Copies', 'total'],
+                ['Book Copies', 'Total'],
                 ["Borrowed", {{$borrowed_copies}}],
                 ["Reserved", {{$reserved_copies}}],
                 ["Remaining", {{$remaining_copies}}],
@@ -61,7 +61,7 @@
             // Create the data table.
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Status');
-            data.addColumn('number', 'total');
+            data.addColumn('number', 'Total');
             data.addRows([
                     @foreach($user_accounts as $account)
                 ["{{ $account->status_value }}", {{ $account->total }}],
