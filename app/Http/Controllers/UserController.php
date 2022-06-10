@@ -14,7 +14,22 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('user.home');
+        $categories = DB::table('categories')
+            ->leftJoin('books', 'categories.id', '=', 'books.category_id')
+            ->select('categories.category_name', DB::raw('count(1) as total'))
+            ->groupBy('categories.category_name')
+            ->get();
+
+        $borrowed_books = DB::table('loans')
+            ->join('books', 'loans.book_id', '=', 'books.id')
+            ->select('books.id','books.title', DB::raw('count(1) as total'))
+            ->whereNull('loans.returned_date')
+            ->groupBy('books.id', 'books.title')
+            ->orderBy('total', 'DESC')
+            ->limit(4)
+            ->get();
+
+        return view('user.home', compact('categories', 'borrowed_books'));
     }
 
     public function showBooks()
@@ -42,7 +57,7 @@ class UserController extends Controller
                 'reservations.id', 'reservations.book_id', 'reservations.reservation_date',
                 'reservation_statuses.status_value')
             ->where('reservations.user_id', '=', $user_id)
-            ->whereIn('reservations.reservation_status_id', [1,4])
+            ->whereIn('reservations.reservation_status_id', [1, 4])
             ->get();
         return view('user.reserved-books', compact('reserved_books'));
     }
@@ -59,6 +74,7 @@ class UserController extends Controller
         $book_id = $request->id;
         $reservation = Reservation::where('book_id', '=', $book_id)
             ->where('user_id', '=', $user_id)
+            ->whereIn('reservation_status_id', array(1, 3, 4))
             ->first();
 
         $remaining_copy = Book::find($book_id)->remaining_copies;

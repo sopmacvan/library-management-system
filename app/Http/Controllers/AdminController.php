@@ -18,8 +18,18 @@ class AdminController extends Controller
 
     public function index()
     {
+        $total_copies = Book::sum('copies_owned');
+        $remaining_copies = Book::sum('remaining_copies');
+        $reserved_copies = Reservation::where('reservation_status_id', 1)->count();
+        $borrowed_copies = $total_copies - ($remaining_copies + $reserved_copies);
 
-        return view('admin.home');
+        $user_accounts = DB::table('user_statuses')
+            ->join('users', 'user_statuses.id', '=', 'users.user_status_id')
+            ->select('user_statuses.status_value', DB::raw('count(1) as total'))
+            ->groupBy('user_statuses.status_value')
+            ->get();
+
+        return view('admin.home', compact('remaining_copies', 'reserved_copies', 'borrowed_copies', 'user_accounts'));
     }
 
     public function showReservedBooks()
@@ -45,7 +55,7 @@ class AdminController extends Controller
             ->select(
                 'users.id', 'users.name', 'users.email', 'users.created_at', 'users.updated_at',
                 'user_statuses.status_value')
-            ->where('users.user_role_id','=','1')
+            ->where('users.user_role_id', '=', '1')
             ->get();
 
 
