@@ -48,7 +48,7 @@ class UserController extends Controller
 
     public function showReservedBooks()
     {
-        $user_id = Auth::user()->getId();
+        $user_id = Auth::user()->id;
         $reserved_books = DB::table('reservations')
             ->join('books', 'reservations.book_id', '=', 'books.id')
             ->join('reservation_statuses', 'reservations.reservation_status_id', '=', 'reservation_statuses.id')
@@ -70,7 +70,7 @@ class UserController extends Controller
             return redirect()->back();
         }
 
-        $user_id = Auth::user()->getId();
+        $user_id = Auth::user()->id;
         $book_id = $request->id;
         $reservation = Reservation::where('book_id', '=', $book_id)
             ->where('user_id', '=', $user_id)

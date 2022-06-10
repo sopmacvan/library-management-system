@@ -71,14 +71,14 @@
                 <h4>Welcome, {{ Auth::user()->name }}
                 </h4>
                 <!-- Navigation links in sidebar-->
-                @if (Auth::user()->getRole() == 'user')
+                @if (Auth::user()->hasRole('user'))
                     <a class="nav-link" href="{{ route('user') }}">{{ __('Home') }}</a>
                     <a class="nav-link" href="{{ route('books') }}">{{ __('Books') }}</a>
                     <a class="nav-link" href="{{ route('login') }}">{{ __('Borrowed Books') }}</a>
                     <a class="nav-link" href="{{ route('reserved-books') }}">{{ __('Reserved Books') }}</a>
                     <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>
                 @endif
-                @if(Auth::user()->getRole() == 'admin')
+                @if(Auth::user()->hasRole('admin'))
                     <a class="nav-link" href="{{ route('admin') }}">{{ __('Home') }}</a>
                     <a class="nav-link" href="{{ route('manage-users') }}">{{ __('Manage Users') }}</a>
                     <a class="nav-link" href="{{ route('login') }}">{{ __('Manage Borrowed Books') }}</a>

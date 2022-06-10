@@ -36,12 +36,13 @@ class RegisterController extends Controller
     {
         return '/user';
 
-//        $role = Auth::user()->getRole();
-//        return match ($role) {
-//            'user' => '/user',
-//            'admin' => '/admin',
-//            default => '/login',
-//        };
+//        if (Auth::user()->hasRole('user')) {
+//            return '/user';
+//        }
+//        if (Auth::user()->hasRole('admin')) {
+//            return '/admin';
+//        }
+//        return '/login';
     }
 
     /**
