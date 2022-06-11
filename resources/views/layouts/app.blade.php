@@ -81,6 +81,7 @@
                 @if(Auth::user()->hasRole('admin'))
                     <a class="nav-link" href="{{ route('admin') }}">{{ __('Home') }}</a>
                     <a class="nav-link" href="{{ route('manage-users') }}">{{ __('Manage Users') }}</a>
+                    <a class="nav-link" href="{{ route('manage-books') }}">{{ __('Manage Books') }}</a>
                     <a class="nav-link" href="{{ route('login') }}">{{ __('Manage Borrowed Books') }}</a>
                     <a class="nav-link"
                        href="{{ route('manage-reserved-books') }}">{{ __('Manage Reserved Books') }}</a>

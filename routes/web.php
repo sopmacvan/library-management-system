@@ -39,8 +39,17 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     Route::get('/manage-users', [AdminController::class, 'showUsers'])->name('manage-users');
     Route::get('/change-user-status/{id}', [AdminController::class, 'changeUserStatus'])->name('change-user-status');
+
+    Route::get('/manage-books', [AdminController::class, 'showBooks'])->name('manage-books');
+    Route::get('/create-book', [AdminController::class, 'createBook'])->name('create-book');
+    Route::post('/save-created-book', [AdminController::class, 'saveCreatedBook'])->name('save-created-book');
+    Route::get('/edit-book/{id}', [AdminController::class, 'editBook'])->name('edit-book');
+    Route::post('/save-edited-book', [AdminController::class, 'saveEditedBook'])->name('save-edited-book');
+    Route::get('/delete-book/{id}', [AdminController::class, 'deleteBook'])->name('delete-book');
+
     Route::get('/manage-reserved-books', [AdminController::class, 'showReservedBooks'])->name('manage-reserved-books');
     Route::get('/complete-book-reservation/{id}', [AdminController::class, 'completeBookReservation'])->name('complete-book-reservation');
+
 
 });
 
