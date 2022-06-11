@@ -162,7 +162,7 @@ class AdminController extends Controller
         $timestamp = strtotime($publication_date);
         $publication_date = date("Y-m-d", $timestamp);
 
-
+//create book
         $book = Book::create([
             'title' => $book_title,
             'publication_date' => $publication_date,
@@ -170,17 +170,17 @@ class AdminController extends Controller
             'remaining_copies' => $copies_owned,
             'category_id' => $category_id
         ]);
-
+//create author
         $author = Author::create([
             'first_name' => $author_fname,
             'last_name' => $author_lname
         ]);
 
+//create book author
         BookAuthor::create([
             'book_id' => $book->id,
             'author_id' => $author->id
         ]);
-
 
     }
 
