@@ -18,7 +18,7 @@ class CategorySeeder extends Seeder
     {
         DB::table('categories')->truncate();
 
-        $categories = array('Education', 'Business and Economics', 'Mathematics', 'Medical', ' Psychology', 'Science');
+        $categories = array('Other','Education', 'Business and Economics', 'Mathematics', 'Medical', ' Psychology', 'Science');
         foreach ($categories as $category) {
             Category::create([
                 'category_name' => $category

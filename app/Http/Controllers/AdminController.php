@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Author;
+use App\Models\BookAuthor;
+use App\Models\Category;
 use App\Models\Loan;
 use App\Models\Reservation;
 use App\Models\User;
@@ -30,6 +33,20 @@ class AdminController extends Controller
             ->get();
 
         return view('admin.home', compact('remaining_copies', 'reserved_copies', 'borrowed_copies', 'user_accounts'));
+    }
+
+    public function showBooks()
+    {
+        $books = DB::table('book_authors')
+            ->join('books', 'book_authors.book_id', '=', 'books.id')
+            ->join('authors', 'book_authors.author_id', '=', 'authors.id')
+            ->join('categories', 'books.category_id', '=', 'categories.id')
+            ->select(
+                'books.id', 'books.title', 'books.publication_date', 'books.copies_owned', 'books.remaining_copies',
+                'authors.first_name', 'authors.last_name',
+                'categories.category_name')
+            ->get();
+        return view('admin.manage-books', compact('books'));
     }
 
     public function showReservedBooks()
@@ -124,4 +141,57 @@ class AdminController extends Controller
         }
 
     }
+
+    public function createBook()
+    {
+        $categories = Category::all();
+        return view('admin.create-book', compact('categories'));
+    }
+
+    public function saveCreatedBook(Request $request)
+    {
+        $author_fname = $request->author_fname;
+        $author_lname = $request->author_lname;
+
+        $book_title = $request->title;
+        $category_id = $request->category;
+        $copies_owned = $request->copies_owned;
+
+        //convert date to y-m-d
+        $publication_date = $request->publication_date;
+        $timestamp = strtotime($publication_date);
+        $publication_date = date("Y-m-d", $timestamp);
+
+
+        $book = Book::create([
+            'title' => $book_title,
+            'publication_date' => $publication_date,
+            'copies_owned' => $copies_owned,
+            'remaining_copies' => $copies_owned,
+            'category_id' => $category_id
+        ]);
+
+        $author = Author::create([
+            'first_name' => $author_fname,
+            'last_name' => $author_lname
+        ]);
+
+        BookAuthor::create([
+            'book_id' => $book->id,
+            'author_id' => $author->id
+        ]);
+
+
+    }
+
+    public function editBook()
+    {
+
+    }
+
+    public function saveEditedBook()
+    {
+
+    }
+
 }
