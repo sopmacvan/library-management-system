@@ -46,7 +46,7 @@ class AdminController extends Controller
                 'authors.first_name', 'authors.last_name',
                 'categories.category_name')
             ->get();
-        return view('admin.manage-books', compact('books'));
+        return view('admin.manage-books.books', compact('books'));
     }
 
     public function showReservedBooks()
@@ -145,7 +145,7 @@ class AdminController extends Controller
     public function createBook()
     {
         $categories = Category::all();
-        return view('admin.create-book', compact('categories'));
+        return view('admin.manage-books.create-book', compact('categories'));
     }
 
     public function saveCreatedBook(Request $request)
@@ -156,13 +156,13 @@ class AdminController extends Controller
         $book_title = $request->title;
         $category_id = $request->category;
         $copies_owned = $request->copies_owned;
-
-        //convert date to y-m-d
         $publication_date = $request->publication_date;
+
+        //convert date format to y-m-d
         $timestamp = strtotime($publication_date);
         $publication_date = date("Y-m-d", $timestamp);
 
-//create book
+        //create book
         $book = Book::create([
             'title' => $book_title,
             'publication_date' => $publication_date,
@@ -170,13 +170,13 @@ class AdminController extends Controller
             'remaining_copies' => $copies_owned,
             'category_id' => $category_id
         ]);
-//create author
+        //create author
         $author = Author::create([
             'first_name' => $author_fname,
             'last_name' => $author_lname
         ]);
 
-//create book author
+        //create book author
         BookAuthor::create([
             'book_id' => $book->id,
             'author_id' => $author->id
@@ -184,13 +184,58 @@ class AdminController extends Controller
 
     }
 
-    public function editBook()
+    public function editBook(Request $request)
     {
+//        get book author, book, author, category
+//        display them in blade
+//        save changes using saveEditedBook()
 
+        $book = DB::table('book_authors')
+            ->join('books', 'book_authors.book_id', '=', 'books.id')
+            ->join('authors', 'book_authors.author_id', '=', 'authors.id')
+            ->join('categories', 'books.category_id', '=', 'categories.id')
+            ->select(
+                'books.id', 'books.title', 'books.publication_date', 'books.copies_owned',
+                'authors.first_name', 'authors.last_name')
+            ->where('book_authors.book_id', '=', $request->id)
+            ->first();
+
+        $categories = Category::all();
+        return view('admin.manage-books.edit-book', compact('book', 'categories'));
     }
 
-    public function saveEditedBook()
+    public function saveEditedBook(Request $request)
     {
+//        update book and author
+        $book_id = $request->id;
+        $author_id = BookAuthor::where('book_id', $book_id)->first()->author_id;
+
+        $book = Book::find($book_id);
+        $book->title = $request->title;
+        $book->category_id = $request->category;
+        $book->publication_date = $request->publication_date;
+
+
+//        if copies owned is less than new value, add
+//        if greater, subtract
+        $amount = $book->copies_owned;
+        $new_amount = $request->copies_owned;
+        if ($amount < $new_amount) {
+            $book->copies_owned += ($new_amount-$amount);
+            $book->remaining_copies += ($new_amount - $amount);
+        } elseif ($amount > $new_amount) {
+            $book->copies_owned -= ($new_amount-$amount);
+            $book->remaining_copies -= ($new_amount - $amount);
+        }
+
+        $author = Author::find($author_id);
+        $author->first_name = $request->author_fname;
+        $author->last_name = $request->author_lname;
+
+        $book->save();
+        $author->save();
+
+        return redirect('/manage-books');
 
     }
 
