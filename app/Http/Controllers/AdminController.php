@@ -239,4 +239,8 @@ class AdminController extends Controller
 
     }
 
+    public function deleteBook(Request $request)
+    {
+
+    }
 }
