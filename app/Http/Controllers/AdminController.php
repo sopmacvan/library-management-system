@@ -175,9 +175,9 @@ class AdminController extends Controller
             'first_name' => $author_fname,
             'last_name' => $author_lname
         ]);
-
         //create book author
-        DB::table('book_authors')->insert([
+
+        BookAuthor::create([
             'book_id' => $book->id,
             'author_id' => $author->id
         ]);

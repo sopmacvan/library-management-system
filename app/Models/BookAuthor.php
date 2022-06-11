@@ -11,6 +11,6 @@ class BookAuthor extends Model
 
     protected $fillable = [
         'book_id',
-        'book_author'
+        'author_id'
     ];
 }
