@@ -88,7 +88,7 @@
             $('#delete_btn').click(function () {
                 //get row data, you can access it like an array
                 const row_data = table.row('.selected').data();
-                window.location.href = `/create-book-reservation/${row_data[0]}`;
+                window.location.href = `/delete-book/${row_data[0]}`;
             });
         });
     </script>

@@ -182,6 +182,10 @@ class AdminController extends Controller
             'author_id' => $author->id
         ]);
 
+        $request->session()->flash('message', "Created book {$book->title} successfully.");
+        return redirect('/manage-books');
+
+
     }
 
     public function editBook(Request $request)
@@ -224,8 +228,8 @@ class AdminController extends Controller
             $book->copies_owned += ($new_amount-$amount);
             $book->remaining_copies += ($new_amount - $amount);
         } elseif ($amount > $new_amount) {
-            $book->copies_owned -= ($new_amount-$amount);
-            $book->remaining_copies -= ($new_amount - $amount);
+            $book->copies_owned -= ($amount-$new_amount);
+            $book->remaining_copies -= ($amount-$new_amount);
         }
 
         $author = Author::find($author_id);
@@ -235,12 +239,17 @@ class AdminController extends Controller
         $book->save();
         $author->save();
 
+        $request->session()->flash('message', "Edited book {$book->id} successfully.");
         return redirect('/manage-books');
 
     }
 
     public function deleteBook(Request $request)
     {
+        $book = Book::find($request->id);
+        $book->delete();
 
+        $request->session()->flash('message', "Deleted book {$book->id} successfully.");
+        return redirect('/manage-books');
     }
 }
