@@ -19,7 +19,7 @@
             Publication Date:
             <div><input required type="date" name="publication_date"></div>
             Copies Owned:
-            <div><input required type="text" name="copies_owned"></div>
+            <div><input required type="number" name="copies_owned"></div>
             <div>
                 <button class="btn btn-primary btn-lg" onclick="">Save</button>
             </div>

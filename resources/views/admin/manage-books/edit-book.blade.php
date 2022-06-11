@@ -20,7 +20,7 @@
             Publication Date:
             <div><input required type="date" value="{{$book->publication_date}}" name="publication_date"></div>
             Copies Owned:
-            <div><input required type="text" value="{{$book->copies_owned}}" name="copies_owned"></div>
+            <div><input required type="number" value="{{$book->copies_owned}}" name="copies_owned"></div>
             <div>
                 <button class="btn btn-primary btn-lg" onclick="">Save</button>
             </div>
