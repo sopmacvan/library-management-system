@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Admin Dashboard</div>
+                    <div class="panel-heading" id="BT">Admin</div>
 
                     <div class="panel-body">
                         @if (session('status'))
@@ -14,7 +15,6 @@
                             </div>
                         @endif
 
-                        This is Admin Dashboard. Welcome !
                         <div id="book_copies_pi" style="width: 900px; height: 500px;"></div>
                         <div id="user_accounts_pi" style="width: 900px; height: 500px;"></div>
                     </div>

@@ -2,9 +2,13 @@ html,
 body {
     height: 100%;
 }
-#green {
-    height: 100%;
-    background: green;
-    text-align: center;
+#txtBtn {
     color: black;
+    font-size: 18px;
+    text-align: left;
+}
+
+#BT {
+    font-size: 28px;
+    font-weight: bold;
 }
