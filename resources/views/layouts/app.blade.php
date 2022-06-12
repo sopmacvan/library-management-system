@@ -87,7 +87,6 @@
                     <a id="txtBtn" class="nav-link"
                        href="{{ route('manage-reserved-books') }}"><span class="bi-journal-check"></span>{{ __(' Manage Reserved Books') }}</a>
                     <a id="txtBtn" class="nav-link" href="{{ route('login') }}"><span class="bi-clock-history"></span>{{ __(' Transaction History') }}</a>
->>>>>>> origin/my-branch-name
                 @endif
                 <a id="txtBtn" class="nav-link " href="{{ route('logout') }}"
                    onclick="event.preventDefault();
