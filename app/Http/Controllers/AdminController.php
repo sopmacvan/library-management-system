@@ -75,6 +75,7 @@ class AdminController extends Controller
                 'books.title',
                 'users.name', 'users.email',
                 'loans.loan_date', 'loans.expected_return_date')
+            ->whereNull('loans.returned_date')
             ->whereNull('loans.deleted_at')
             // ->where('loans.return_date', '=', 'null')
             ->get();
@@ -109,34 +110,73 @@ class AdminController extends Controller
         $book_id = $request->book_id;
         $user = User::find($user_id);
         $book = Book::find($book_id);
-//        check if user and book does not exist
+//        check if user does not exist
         if (!$user) {
             $request->session()->flash('error', "User {$user_id} does not exist.");
-        } else if (!$book) {
+            return redirect()->back();
+//check if book does not exist
+        }
+        if (!$book) {
             $request->session()->flash('error', "Book {$book_id} does not exist");
-        } //        check if user is an admin
-        else if ($user->hasRole('admin')) {
+            return redirect()->back();
+        }
+        //        check if user is an admin
+        if ($user->hasRole('admin')) {
             $request->session()->flash('error', "Only non-admin users can borrow a book");
-        } else if ($book->remaining_copies <= 0) {
+            return redirect()->back();
+        }
+
+//        check if user already borrowed this book
+        $loan = Loan::where('user_id', $user_id)
+            ->where('book_id', $book_id)
+            ->whereNull('returned_date')
+            ->whereNull('deleted_at')
+            ->first();
+        if ($loan) {
+            $request->session()->flash('error', "User has already borrowed this book.");
+            return redirect()->back();
+
+        }
+
+//        check if there are still copies remainining
+        if ($book->remaining_copies <= 0) {
             $request->session()->flash('error', 'No more copies remaining.');
-        } else {
-            Loan::create([
-                'book_id' => $book_id,
-                'user_id' => $user_id,
-                'loan_date' => Carbon::now()->format('Y-m-d'),
-                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
-            ]);
-
-//decrement remainining copy
-            $book->remaining_copies -= 1;
-            $book->save();
-
-            $request->session()->flash('message', "Added borrower {$user_id} successfully");
-            return redirect('/manage-borrowed-books');
+            return redirect()->back();
         }
 
 
-        return redirect()->back();
+        $borrow_limit = 3;
+        $borrow_count = DB::table('loans')
+            ->leftjoin('users', 'loans.book_id', '=', 'users.id')
+            ->select('loans.user_id', DB::raw('count(1) as total'))
+            ->where('loans.user_id', '=', $user_id)
+            ->whereNull('loans.returned_date')
+            ->whereNull('loans.deleted_at')
+            ->groupBy('loans.user_id')
+            ->first()
+            ->total;
+//check if user has reached borrow limit
+        if ($borrow_count >= $borrow_limit) {
+            $request->session()->flash('error', "User has reached max borrow limit of {$borrow_limit}.");
+            return redirect()->back();
+        }
+
+
+        Loan::create([
+            'book_id' => $book_id,
+            'user_id' => $user_id,
+            'loan_date' => Carbon::now()->format('Y-m-d'),
+            'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
+        ]);
+
+//decrement remainining copy
+        $book->remaining_copies -= 1;
+        $book->save();
+
+        $request->session()->flash('message', "Added borrower {$user_id} successfully");
+        return redirect('/manage-borrowed-books');
+
+
     }
 
     public function returnBook(Request $request)
@@ -156,6 +196,7 @@ class AdminController extends Controller
 //        delete from loans table and increment book remaining copy
         $loan->delete();
         $book->remaining_copies += 1;
+        $book->save();
 
         $request->session()->flash('message', "Returned book {$book->id} successfully.");
 
