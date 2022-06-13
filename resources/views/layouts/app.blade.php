@@ -74,17 +74,17 @@
                 @if (Auth::user()->hasRole('user'))
                     <a class="nav-link" href="{{ route('user') }}">{{ __('Home') }}</a>
                     <a class="nav-link" href="{{ route('books') }}">{{ __('Books') }}</a>
-                    <a class="nav-link" href="{{ route('login') }}">{{ __('Borrowed Books') }}</a>
+                    <a class="nav-link" href="{{ route('borrowed-books') }}">{{ __('Borrowed Books') }}</a>
                     <a class="nav-link" href="{{ route('reserved-books') }}">{{ __('Reserved Books') }}</a>
                     <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>
                 @endif
                 @if(Auth::user()->hasRole('admin'))
                     <a class="nav-link" href="{{ route('admin') }}">{{ __('Home') }}</a>
                     <a class="nav-link" href="{{ route('manage-users') }}">{{ __('Manage Users') }}</a>
-                    <a class="nav-link" href="{{ route('login') }}">{{ __('Manage Borrowed Books') }}</a>
+                    <a class="nav-link" href="{{ route('manage-borrowed-books') }}">{{ __('Manage Borrowed Books') }}</a>
                     <a class="nav-link"
                        href="{{ route('manage-reserved-books') }}">{{ __('Manage Reserved Books') }}</a>
-                    <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>
+                    <a class="nav-link" href="{{ route('transaction-history') }}">{{ __('Transaction History') }}</a>
                 @endif
                 <a class="nav-link " href="{{ route('logout') }}"
                    onclick="event.preventDefault();
@@ -153,7 +153,7 @@
 {{--                            @if (Auth::user()->getRole() == 'user')--}}
 {{--                                <a class="nav-link" href="{{ route('user') }}">{{ __('Home') }}</a>--}}
 {{--                                <a class="nav-link" href="{{ route('books') }}">{{ __('Books') }}</a>--}}
-{{--                                <a class="nav-link" href="{{ route('login') }}">{{ __('Borrowed Books') }}</a>--}}
+{{--                                <a class="nav-link" href="{{ route('borrowed-books') }}">{{ __('Borrowed Books') }}</a>--}}
 {{--                                <a class="nav-link" href="{{ route('reserved-books') }}">{{ __('Reserved Books') }}</a>--}}
 {{--                                <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>--}}
 {{--                            @endif--}}

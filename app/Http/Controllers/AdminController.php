@@ -48,6 +48,65 @@ class AdminController extends Controller
         return view('admin.manage-reserved-books', compact('reserved_books'));
     }
 
+    // Route /manage-borrowed-books 
+    public function showManageBorrowedBooks () 
+    {
+        $borrowed_books = DB::table('users')
+        ->join('reservations', 'users.id', '=', 'reservations.user_id')
+        ->join('loans', 'users.id', '=', 'loans.user_id')
+        ->join('books', 'reservations.book_id', '=', 'books.id')
+        ->select(   'reservations.book_id',
+                    'books.title', 
+                    'users.id', 'users.name', 'users.email', 
+                    'loans.loan_date', 'loans.expected_return_date')
+        // ->where('loans.return_date', '=', 'null')
+        ->get();
+        return view('admin.manage-borrowed-books', compact('borrowed_books'));
+    }
+
+    // Route get() /add-borrower/{id}
+    public function addBorrower(Request $request, $from_reservation = false)
+    {
+        if ($from_reservation) {
+            $reservation_id = $request->id;
+            $reservation = Reservation::find($reservation_id);
+            $book_id = $reservation->book_id;
+            $user_id = $reservation->user_id;
+
+            Loan::create([
+                'book_id' => $book_id,
+                'user_id' => $user_id,
+                'loan_date' => Carbon::now()->format('Y-m-d'),
+                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
+            ]);
+        } else {
+            
+            $user_id = Auth::user()->id;
+            $book_id=$request->id;
+
+            Loan::create([
+                'book_id' => $book_id,
+                'user_id' => $user_id,
+                'loan_date' => Carbon::now()->format('Y-m-d'),
+                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
+            ]);
+
+        }
+        return redirect()->back();
+    }
+
+    public function showTransactionHistory () 
+    {
+        $transactions = DB::table('loans')
+        ->join('books', 'loans.book_id', '=', 'books.id')
+        ->join('users', 'loans.user_id', '=', 'users.id')
+        ->select( 'books.title', 'users.name', 'users.email', 'loans.book_id', 'loans.user_id',
+                    'loans.loan_date', 'loans.expected_return_date', 'loans.returned_date')
+        ->get();
+
+        return view('admin.transaction-history', compact('transactions'));
+    }
+
     public function showUsers()
     {
         $users = DB::table('users')
@@ -107,21 +166,5 @@ class AdminController extends Controller
 
     }
 
-    public function addBorrower(Request $request, $from_reservation = false)
-    {
-        if ($from_reservation) {
-            $reservation_id = $request->id;
-            $reservation = Reservation::find($reservation_id);
-            $book_id = $reservation->book_id;
-            $user_id = $reservation->user_id;
-
-            Loan::create([
-                'book_id' => $book_id,
-                'user_id' => $user_id,
-                'loan_date' => Carbon::now()->format('Y-m-d'),
-                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
-            ]);
-        }
-
-    }
+    
 }

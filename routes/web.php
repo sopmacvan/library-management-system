@@ -29,6 +29,7 @@ Route::middleware(['role:user'])->group(function () {
     //    put user routes here.
     Route::get('/user', [UserController::class, 'index'])->name('user');
     Route::get('/books', [UserController::class, 'showBooks'])->name('books');
+    Route::get('/borrowed-books', [UserController::class, 'showBorrowedBooks'])->name('borrowed-books');
     Route::get('/reserved-books', [UserController::class, 'showReservedBooks'])->name('reserved-books');
     Route::get('/create-book-reservation/{id}', [UserController::class, 'createBookReservation'])->name('create-book-reservation');
 
@@ -39,8 +40,11 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     Route::get('/manage-users', [AdminController::class, 'showUsers'])->name('manage-users');
     Route::get('/change-user-status/{id}', [AdminController::class, 'changeUserStatus'])->name('change-user-status');
+    Route::get('/manage-borrowed-books', [AdminController::class, 'showManageBorrowedBooks'])->name('manage-borrowed-books');
+    Route::get('/add-borrower/{id}', [AdminController::class, 'addBorrower']);
     Route::get('/manage-reserved-books', [AdminController::class, 'showReservedBooks'])->name('manage-reserved-books');
     Route::get('/complete-book-reservation/{id}', [AdminController::class, 'completeBookReservation'])->name('complete-book-reservation');
+    Route::get('/transaction-history', [AdminController::class, 'showTransactionHistory'])->name('transaction-history');
 
 });
 

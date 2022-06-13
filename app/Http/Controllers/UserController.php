@@ -46,6 +46,19 @@ class UserController extends Controller
         return view('user.books', compact('books'));
     }
 
+    // Borrowed Books method from route get('/borrowed-books')
+    // Added by James
+    public function showBorrowedBooks ()
+    {
+        $borrowed_books = DB::table('books')
+        ->join('loans', 'books.id', '=', 'loans.book_id')
+        ->select('books.id', 'books.title', 'loans.loan_date', 'loans.expected_return_date')
+        ->whereNull('loans.returned_date')
+        ->get();
+
+        return view('user.borrowed-books', compact('borrowed_books'));
+    }
+
     public function showReservedBooks()
     {
         $user_id = Auth::user()->id;
