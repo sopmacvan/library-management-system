@@ -6,6 +6,8 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
+                    <div class="panel-heading" id="BT">Transaction History</div>
+
                     {{--                    <div class="panel-heading">Books Page</div>--}}
 
                     {{--                <div class="panel-body">--}}
@@ -23,7 +25,7 @@
                         </div>
                     @endif
 
-                    
+
                     <table id="transaction-history-table">
                         <thead>
                         <tr>
@@ -74,7 +76,7 @@
                 // const row_data = table.row( '.selected' ).data();
                 // window.location.href = `/cancel-book-reservation/${row_data[0]}`;
             });
-            
+
 
             // $('#reserved_books_table tbody').on('click', 'tr', function () {
             //     //mark or unmark as selected, highlights row
@@ -87,7 +89,7 @@
             //     }
             // });
 
-            
+
         });
     </script>
 @endsection

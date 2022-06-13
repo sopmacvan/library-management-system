@@ -6,6 +6,8 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
+                    <div class="panel-heading" id="BT">Manage Borrowed Books</div>
+
                     {{--                    <div class="panel-heading">Books Page</div>--}}
 
                     {{--                <div class="panel-body">--}}
@@ -73,7 +75,7 @@
                 // const row_data = table.row( '.selected' ).data();
                 // window.location.href = `/cancel-book-reservation/${row_data[0]}`;
             });
-            
+
 
             // $('#reserved_books_table tbody').on('click', 'tr', function () {
             //     //mark or unmark as selected, highlights row
@@ -86,7 +88,7 @@
             //     }
             // });
 
-            
+
         });
     </script>
 @endsection
