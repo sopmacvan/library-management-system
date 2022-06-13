@@ -253,3 +253,17 @@ class AdminController extends Controller
         return redirect('/manage-books');
     }
 }
+//        use softdelete
+//        when borrowing, add to loans table
+//        when returning, delete(soft delete from loans table) add a new one(same values) to loans table w/ returned date
+//        to query borrowed books that are not yet returned, find where returned date is null (for manage-borrowed-books)
+//        to query borrowed books that are not yet returned of user, find where returned date is null, where user_id = id (for borrowed-books)
+//        to query all borrowed and returned books, find with trashed all (for admin transaction-history)
+//        to query all borrowed and returned books of user, find with trashed all, where user_id = id (for user transaction-history)
+
+//        to query most borrowed books, find with trashed all, count(), where returned_date is null (for me, in chart)
+
+
+//        note: queries will not include softdeleted records.
+//        note: to include them, use withTrashed() method.
+
