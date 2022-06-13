@@ -68,14 +68,14 @@ class AdminController extends Controller
     // Route /manage-borrowed-books
     public function showManageBorrowedBooks()
     {
-        $borrowed_books = DB::table('users')
-            ->join('reservations', 'users.id', '=', 'reservations.user_id')
-            ->join('loans', 'users.id', '=', 'loans.user_id')
-            ->join('books', 'reservations.book_id', '=', 'books.id')
+        $borrowed_books = DB::table('loans')
+            ->join('users', 'loans.user_id', '=', 'users.id')
+            ->join('books', 'loans.book_id', '=', 'books.id')
             ->select('reservations.book_id',
                 'books.title',
                 'users.id', 'users.name', 'users.email',
                 'loans.loan_date', 'loans.expected_return_date')
+            ->whereNull('loans.deleted_at')
             // ->where('loans.return_date', '=', 'null')
             ->get();
         return view('admin.manage-borrowed-books.borrowed-books', compact('borrowed_books'));

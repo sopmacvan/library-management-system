@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('expected_return_date');
             $table->date('returned_date')->nullable();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
