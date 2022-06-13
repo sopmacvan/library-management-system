@@ -114,16 +114,12 @@ class AdminController extends Controller
             $request->session()->flash('error', "User {$user_id} does not exist.");
         } else if (!$book) {
             $request->session()->flash('error', "Book {$book_id} does not exist");
-        }
-        //        check if user is an admin
+        } //        check if user is an admin
         else if ($user->hasRole('admin')) {
             $request->session()->flash('error', "Only non-admin users can borrow a book");
-        }
-        else if ($book->remaining_copies <= 0){
+        } else if ($book->remaining_copies <= 0) {
             $request->session()->flash('error', 'No more copies remaining.');
-        }
-
-        else {
+        } else {
             Loan::create([
                 'book_id' => $book_id,
                 'user_id' => $user_id,
@@ -149,12 +145,12 @@ class AdminController extends Controller
         $book = Book::find($loan->book_id);
 
 // create a new record, which has returned date
-         Loan::create([
+        Loan::create([
             'book_id' => $loan->book_id,
             'user_id' => $loan->user_id,
             'loan_date' => $loan->loan_date,
             'expected_return_date' => $loan->expected_return_date,
-             'returned_date' => Carbon::now()->format('Y-m-d'),
+            'returned_date' => Carbon::now()->format('Y-m-d'),
         ]);
 
 //        delete from loans table and increment book remaining copy
@@ -342,6 +338,12 @@ class AdminController extends Controller
     public function deleteBook(Request $request)
     {
         $book = Book::find($request->id);
+        if ($book->copies_owned != $book->remaining_copies) {
+            $request->session()->flash('info', "Cannot delete book. Some copies were still not returned");
+            return redirect('/manage-books');
+
+        }
+
         $book->delete();
 
         $request->session()->flash('info', "Deleted book {$book->id} successfully.");
