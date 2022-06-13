@@ -130,17 +130,21 @@ class AdminController extends Controller
             return redirect()->back();
         }
 
+        $borrow_limit = 3;
         $borrow_count = DB::table('loans')
             ->leftjoin('users', 'loans.book_id', '=', 'users.id')
-            ->select('loans.user_id',DB::raw('count(1) as total'))
+            ->select('loans.user_id', DB::raw('count(1) as total'))
             ->where('loans.user_id', '=', $user_id)
             ->whereNull('loans.returned_date')
             ->whereNull('loans.deleted_at')
             ->groupBy('loans.user_id')
-            ->get();
+            ->first()
+            ->total;
 
-        dd($borrow_count);
-
+        if ($borrow_count >= $borrow_limit) {
+            $request->session()->flash('error', "User has reached max borrow limit of {$borrow_limit}.");
+            return redirect()->back();
+        }
 
 
         Loan::create([
