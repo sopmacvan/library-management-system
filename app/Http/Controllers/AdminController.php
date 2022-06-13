@@ -75,6 +75,7 @@ class AdminController extends Controller
                 'books.title',
                 'users.name', 'users.email',
                 'loans.loan_date', 'loans.expected_return_date')
+            ->whereNull('loans.returned_date')
             ->whereNull('loans.deleted_at')
             // ->where('loans.return_date', '=', 'null')
             ->get();
@@ -112,31 +113,51 @@ class AdminController extends Controller
 //        check if user and book does not exist
         if (!$user) {
             $request->session()->flash('error', "User {$user_id} does not exist.");
-        } else if (!$book) {
+            return redirect()->back();
+
+        }
+        if (!$book) {
             $request->session()->flash('error', "Book {$book_id} does not exist");
+            return redirect()->back();
+
         } //        check if user is an admin
-        else if ($user->hasRole('admin')) {
+        if ($user->hasRole('admin')) {
             $request->session()->flash('error', "Only non-admin users can borrow a book");
-        } else if ($book->remaining_copies <= 0) {
+            return redirect()->back();
+        }
+        if ($book->remaining_copies <= 0) {
             $request->session()->flash('error', 'No more copies remaining.');
-        } else {
-            Loan::create([
-                'book_id' => $book_id,
-                'user_id' => $user_id,
-                'loan_date' => Carbon::now()->format('Y-m-d'),
-                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
-            ]);
-
-//decrement remainining copy
-            $book->remaining_copies -= 1;
-            $book->save();
-
-            $request->session()->flash('message', "Added borrower {$user_id} successfully");
-            return redirect('/manage-borrowed-books');
+            return redirect()->back();
         }
 
+        $borrow_count = DB::table('loans')
+            ->leftjoin('users', 'loans.book_id', '=', 'users.id')
+            ->select('loans.user_id',DB::raw('count(1) as total'))
+            ->where('loans.user_id', '=', $user_id)
+            ->whereNull('loans.returned_date')
+            ->whereNull('loans.deleted_at')
+            ->groupBy('loans.user_id')
+            ->get();
 
-        return redirect()->back();
+        dd($borrow_count);
+
+
+
+        Loan::create([
+            'book_id' => $book_id,
+            'user_id' => $user_id,
+            'loan_date' => Carbon::now()->format('Y-m-d'),
+            'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
+        ]);
+
+//decrement remainining copy
+        $book->remaining_copies -= 1;
+        $book->save();
+
+        $request->session()->flash('message', "Added borrower {$user_id} successfully");
+        return redirect('/manage-borrowed-books');
+
+
     }
 
     public function returnBook(Request $request)
