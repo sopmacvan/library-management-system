@@ -6,7 +6,6 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading" id="BT">Reserved Books</div>
                     {{--                    <div class="panel-heading">Books Page</div>--}}
 
                     {{--                <div class="panel-body">--}}
@@ -18,32 +17,37 @@
                         </div>
                     @endif
 
-                    @if (Session::has('error'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ Session::get('error') }}
+                    @if (Session::has('info'))
+                        <div class="alert alert-info" role="alert">
+                            {{ Session::get('info') }}
                         </div>
                     @endif
 
-                    <button id="cancel_btn">Cancel Reservation</button>
-                    <table id="reserved_books_table">
+                    <button id="create_btn">Create New</button>
+                    <button id="edit_btn">Edit</button>
+                    <button id="delete_btn">Delete</button>
+                    <table id="books_table">
                         <thead>
                         <tr>
                             <th>id</th>
-                            <th>book id</th>
                             <th>title</th>
-                            <th>reservation date</th>
-                            <th>status</th>
-
+                            <th>author</th>
+                            <th>category</th>
+                            <th>publication date</th>
+                            <th>copies owned</th>
+                            <th>remaining copies</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($reserved_books as $book)
+                        @foreach($books as $book)
                             <tr>
                                 <td>{{$book->id}}</td>
-                                <td>{{$book->book_id}}</td>
                                 <td>{{$book->title}}</td>
-                                <td>{{$book->reservation_date}}</td>
-                                <td>{{$book->status_value}}</td>
+                                <td>{{$book->first_name.' '.$book->last_name}}</td>
+                                <td>{{$book->category_name}}</td>
+                                <td>{{$book->publication_date}}</td>
+                                <td>{{$book->copies_owned}}</td>
+                                <td>{{$book->remaining_copies}}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -57,12 +61,12 @@
     <script>
         $(document).ready(function () {
             //apply datatables stuffs (search engine, pages, limit)
-            var table = $('#reserved_books_table').DataTable({
+            var table = $('#books_table').DataTable({
                 "scrollY": "450px",
 
             });
 
-            $('#reserved_books_table tbody').on('click', 'tr', function () {
+            $('#books_table tbody').on('click', 'tr', function () {
                 //mark or unmark as selected, highlights row
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
@@ -73,11 +77,18 @@
                 }
             });
 
-            $('#cancel_btn').click(function () {
+            $('#create_btn').click(function () {
+                window.location.href = `/create-book`;
+            });
+            $('#edit_btn').click(function () {
                 //get row data, you can access it like an array
-                const row_data = table.row( '.selected' ).data();
-                //redirect to /cancel-book-reservation/{id}
-                window.location.href = `/cancel-book-reservation/${row_data[0]}`;
+                const row_data = table.row('.selected').data();
+                window.location.href = `/edit-book/${row_data[0]}`;
+            });
+            $('#delete_btn').click(function () {
+                //get row data, you can access it like an array
+                const row_data = table.row('.selected').data();
+                window.location.href = `/delete-book/${row_data[0]}`;
             });
         });
     </script>

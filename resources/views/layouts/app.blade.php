@@ -6,7 +6,7 @@
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<title>{{ config('app.name', 'Laravel') }}</title>
+<title> BookHub </title>
 
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>
@@ -23,12 +23,17 @@
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+<!-- Bootstrap Font Icon CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
 </head>
 <body>
-<!-- top navbar -->
-<nav class="navbar navbar-expand-lg
-            navbar-light bg-primary">
-    <a class="navbar-brand" href="{{ url('/') }}">Library Management System</a>
+<head>
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg" style="background-color: #1BB2B3;">
+    <a class="navbar-brand" href="{{ url('/') }}" style="color: white; padding: 10px; font-weight: bold; font-size: 28px;"><span class="bi-book-half"></span> BookHub Library Management System</a>
     <!-- hamburger button that toggles the navbar-->
     <button class="navbar-toggler" type="button"
             data-toggle="collapse" data-target="#navbarNavAltMarkup"
@@ -54,42 +59,39 @@
         and main content of the page -->
 <!-- h-100 takes the full height of the body-->
 @guest
-    <ul class="nav-item fixe">
-        @if (Route::has('login'))
-            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-        @endif
-
-        @if (Route::has('register'))
-            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-        @endif
-    </ul>
 
 @else
     <div class="container-fluid h-100">
         <div class="row h-100">
-            <div class="col-2" id="green">
-                <h4>Welcome, {{ Auth::user()->name }}
-                </h4>
+            <div class="col-2" style="background-color: white; text-align: center;">
+                <div class="row mb-3"></div>
+                <h4 style="font-weight: bold;" >Welcome, {{ Auth::user()->name }}</h4>
+                <!-- USER'S ICON -->
+                <i class="bi-person-circle" style="font-size: 100px;"></i>
+
+                <!-- USER'S PAGE -->
                 <!-- Navigation links in sidebar-->
                 @if (Auth::user()->hasRole('user'))
-                    <a class="nav-link" href="{{ route('user') }}">{{ __('Home') }}</a>
-                    <a class="nav-link" href="{{ route('books') }}">{{ __('Books') }}</a>
-                    <a class="nav-link" href="{{ route('borrowed-books') }}">{{ __('Borrowed Books') }}</a>
-                    <a class="nav-link" href="{{ route('reserved-books') }}">{{ __('Reserved Books') }}</a>
-                    <a class="nav-link" href="{{ route('login') }}">{{ __('Transaction History') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('user') }}"><span class="bi-house"></span>{{ __(' Home') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('books') }}"><span class="bi-journals"></span>{{ __(' Books') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('borrowed-books') }}"><span class="bi-check-all"></span>{{ __(' Borrowed Books') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('reserved-books') }}"><span class="bi-hand-thumbs-up"></span>{{ __(' Reserved Books') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('login') }}"><span class="bi-clock-history"></span>{{ __(' Transaction History') }}</a>
                 @endif
+
+                <!-- ADMIN'S PAGE-->
                 @if(Auth::user()->hasRole('admin'))
-                    <a class="nav-link" href="{{ route('admin') }}">{{ __('Home') }}</a>
-                    <a class="nav-link" href="{{ route('manage-users') }}">{{ __('Manage Users') }}</a>
-                    <a class="nav-link" href="{{ route('manage-borrowed-books') }}">{{ __('Manage Borrowed Books') }}</a>
-                    <a class="nav-link"
-                       href="{{ route('manage-reserved-books') }}">{{ __('Manage Reserved Books') }}</a>
-                    <a class="nav-link" href="{{ route('transaction-history') }}">{{ __('Transaction History') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('admin') }}"><span class="bi-house"></span>{{ __(' Home') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('manage-users') }}"><span class="bi-gear"></span>{{ __(' Manage Users') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('manage-borrowed-books') }}"><span class="bi-journal-code"></span>{{ __(' Manage Borrowed Books') }}</a>
+                    <a id="txtBtn" class="nav-link"
+                       href="{{ route('manage-reserved-books') }}"><span class="bi-journal-check"></span>{{ __(' Manage Reserved Books') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('transaction-history') }}"><span class="bi-clock-history"></span>{{ __(' Transaction History') }}</a>
                 @endif
-                <a class="nav-link " href="{{ route('logout') }}"
+                <a id="txtBtn" class="nav-link " href="{{ route('logout') }}"
                    onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                    {{ __('Logout') }}
+                                                     document.getElementById('logout-form').submit();"><span class="bi-box-arrow-left"></span>
+                    {{ __(' Logout') }}
                 </a>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

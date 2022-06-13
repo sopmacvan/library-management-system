@@ -38,13 +38,24 @@ Route::middleware(['role:admin'])->group(function () {
     //    if user has the role 'admin', he can access these routes.
     //    put admin routes here.
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+//manage users
     Route::get('/manage-users', [AdminController::class, 'showUsers'])->name('manage-users');
     Route::get('/change-user-status/{id}', [AdminController::class, 'changeUserStatus'])->name('change-user-status');
+//manage borrowers
     Route::get('/manage-borrowed-books', [AdminController::class, 'showManageBorrowedBooks'])->name('manage-borrowed-books');
     Route::get('/add-borrower/{id}', [AdminController::class, 'addBorrower']);
+//manage books
+    Route::get('/manage-books', [AdminController::class, 'showBooks'])->name('manage-books');
+    Route::get('/create-book', [AdminController::class, 'createBook'])->name('create-book');
+    Route::post('/save-created-book', [AdminController::class, 'saveCreatedBook'])->name('save-created-book');
+    Route::get('/edit-book/{id}', [AdminController::class, 'editBook'])->name('edit-book');
+    Route::post('/save-edited-book', [AdminController::class, 'saveEditedBook'])->name('save-edited-book');
+    Route::get('/delete-book/{id}', [AdminController::class, 'deleteBook'])->name('delete-book');
+//manage reserved books
     Route::get('/manage-reserved-books', [AdminController::class, 'showReservedBooks'])->name('manage-reserved-books');
     Route::get('/complete-book-reservation/{id}', [AdminController::class, 'completeBookReservation'])->name('complete-book-reservation');
     Route::get('/transaction-history', [AdminController::class, 'showTransactionHistory'])->name('transaction-history');
+
 
 });
 

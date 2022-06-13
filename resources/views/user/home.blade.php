@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
     <div class="container">
         <div class="row">
@@ -9,7 +10,7 @@
                             {{ Session::get('message') }}
                         </div>
                     @endif
-                    <div class="panel-heading">User Dashboard</div>
+                    <div class="panel-heading" id="BT">User</div>
 
                     <div class="panel-body">
                         @if (session('status'))
@@ -18,7 +19,6 @@
                             </div>
                         @endif
 
-                        This is User Dashboard. Welcome !
                         <div id="most_borrowed_bar" style="width: 900px; height: 500px;"></div>
                         <div id="book_categories_pi" style="width: 900px; height: 500px;"></div>
                     </div>
