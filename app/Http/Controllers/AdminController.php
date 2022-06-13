@@ -65,6 +65,115 @@ class AdminController extends Controller
         return view('admin.manage-reserved-books', compact('reserved_books'));
     }
 
+    // Route /manage-borrowed-books
+    public function showManageBorrowedBooks()
+    {
+        $borrowed_books = DB::table('loans')
+            ->join('users', 'loans.user_id', '=', 'users.id')
+            ->join('books', 'loans.book_id', '=', 'books.id')
+            ->select('loans.id', 'loans.book_id', 'loans.user_id',
+                'books.title',
+                'users.name', 'users.email',
+                'loans.loan_date', 'loans.expected_return_date')
+            ->whereNull('loans.deleted_at')
+            // ->where('loans.return_date', '=', 'null')
+            ->get();
+        return view('admin.manage-borrowed-books.borrowed-books', compact('borrowed_books'));
+    }
+
+    // Route get() /add-borrower/{id}
+    public function addBorrower(Request $request)
+    {
+        return view('admin.manage-borrowed-books.add-borrower');
+    }
+
+    public function saveAddedBorrower(Request $request, $from_reservation = false)
+    {
+        if ($from_reservation) {
+            $reservation_id = $request->id;
+            $reservation = Reservation::find($reservation_id);
+            $book_id = $reservation->book_id;
+            $user_id = $reservation->user_id;
+
+            Loan::create([
+                'book_id' => $book_id,
+                'user_id' => $user_id,
+                'loan_date' => Carbon::now()->format('Y-m-d'),
+                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
+            ]);
+
+            return redirect()->back();
+        }
+
+        $user_id = $request->user_id;
+        $book_id = $request->book_id;
+        $user = User::find($user_id);
+        $book = Book::find($book_id);
+//        check if user and book does not exist
+        if (!$user) {
+            $request->session()->flash('error', "User {$user_id} does not exist.");
+        } else if (!$book) {
+            $request->session()->flash('error', "Book {$book_id} does not exist");
+        } //        check if user is an admin
+        else if ($user->hasRole('admin')) {
+            $request->session()->flash('error', "Only non-admin users can borrow a book");
+        } else if ($book->remaining_copies <= 0) {
+            $request->session()->flash('error', 'No more copies remaining.');
+        } else {
+            Loan::create([
+                'book_id' => $book_id,
+                'user_id' => $user_id,
+                'loan_date' => Carbon::now()->format('Y-m-d'),
+                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
+            ]);
+
+//decrement remainining copy
+            $book->remaining_copies -= 1;
+            $book->save();
+
+            $request->session()->flash('message', "Added borrower {$user_id} successfully");
+            return redirect('/manage-borrowed-books');
+        }
+
+
+        return redirect()->back();
+    }
+
+    public function returnBook(Request $request)
+    {
+        $loan = Loan::find($request->id);
+        $book = Book::find($loan->book_id);
+
+// create a new record, which has returned date
+        Loan::create([
+            'book_id' => $loan->book_id,
+            'user_id' => $loan->user_id,
+            'loan_date' => $loan->loan_date,
+            'expected_return_date' => $loan->expected_return_date,
+            'returned_date' => Carbon::now()->format('Y-m-d'),
+        ]);
+
+//        delete from loans table and increment book remaining copy
+        $loan->delete();
+        $book->remaining_copies += 1;
+
+        $request->session()->flash('message', "Returned book {$book->id} successfully.");
+
+        return redirect()->back();
+    }
+
+    public function showTransactionHistory()
+    {
+        $transactions = DB::table('loans')
+            ->join('books', 'loans.book_id', '=', 'books.id')
+            ->join('users', 'loans.user_id', '=', 'users.id')
+            ->select('books.title', 'users.name', 'users.email', 'loans.book_id', 'loans.user_id',
+                'loans.loan_date', 'loans.expected_return_date', 'loans.returned_date')
+            ->get();
+
+        return view('admin.transaction-history', compact('transactions'));
+    }
+
     public function showUsers()
     {
         $users = DB::table('users')
@@ -113,7 +222,7 @@ class AdminController extends Controller
             return redirect()->back();
         }
 
-        $this->addBorrower($request, true);
+        $this->saveAddedBorrower($request, true);
         Reservation::where('id', $reservation_id)
             ->update([
                 'reservation_status_id' => 2
@@ -121,24 +230,6 @@ class AdminController extends Controller
         $request->session()->flash('message', "Marked book reservation {$reservation_id} as claimed successfully.");
 
         return redirect()->back();
-
-    }
-
-    public function addBorrower(Request $request, $from_reservation = false)
-    {
-        if ($from_reservation) {
-            $reservation_id = $request->id;
-            $reservation = Reservation::find($reservation_id);
-            $book_id = $reservation->book_id;
-            $user_id = $reservation->user_id;
-
-            Loan::create([
-                'book_id' => $book_id,
-                'user_id' => $user_id,
-                'loan_date' => Carbon::now()->format('Y-m-d'),
-                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
-            ]);
-        }
 
     }
 
@@ -247,6 +338,12 @@ class AdminController extends Controller
     public function deleteBook(Request $request)
     {
         $book = Book::find($request->id);
+        if ($book->copies_owned != $book->remaining_copies) {
+            $request->session()->flash('info', "Cannot delete book. Some copies were still not returned");
+            return redirect('/manage-books');
+
+        }
+
         $book->delete();
 
         $request->session()->flash('info', "Deleted book {$book->id} successfully.");
