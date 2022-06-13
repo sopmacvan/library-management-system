@@ -78,11 +78,16 @@ class AdminController extends Controller
                 'loans.loan_date', 'loans.expected_return_date')
             // ->where('loans.return_date', '=', 'null')
             ->get();
-        return view('admin.manage-borrowed-books', compact('borrowed_books'));
+        return view('admin.manage-borrowed-books.borrowed-books', compact('borrowed_books'));
     }
 
     // Route get() /add-borrower/{id}
-    public function addBorrower(Request $request, $from_reservation = false)
+    public function addBorrower(Request $request)
+    {
+        return view('admin.manage-borrowed-books.add-borrower');
+    }
+
+    public function saveAddedBorrower(Request $request, $from_reservation = false)
     {
         if ($from_reservation) {
             $reservation_id = $request->id;
@@ -100,19 +105,39 @@ class AdminController extends Controller
             return redirect()->back();
         }
 
+        $user_id = $request->user_id;
+        $book_id = $request->book_id;
+        $user = User::find($user_id);
+        $book = Book::find($book_id);
+//        check if user and book does not exist
+        if (!$user) {
+            $request->session()->flash('error', "User {$user_id} does not exist.");
+        }
+        else if (!$book) {
+            $request->session()->flash('error', "Book {$book_id} does not exist");
+        }
+//        check if user is an admin
+        else if ($user->hasRole('admin')) {
+            $request->session()->flash('error', "Only non-admin users can borrow a book");
+        } else {
+            Loan::create([
+                'book_id' => $book_id,
+                'user_id' => $user_id,
+                'loan_date' => Carbon::now()->format('Y-m-d'),
+                'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
+            ]);
 
-        $user_id = Auth::user()->id;
-        $book_id = $request->id;
+            $request->session()->flash('message', "Added borrower {$user_id} successfully");
+            return redirect('/manage-borrowed-books');
+        }
 
-        Loan::create([
-            'book_id' => $book_id,
-            'user_id' => $user_id,
-            'loan_date' => Carbon::now()->format('Y-m-d'),
-            'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
-        ]);
 
-        $request->session()->flash('message', "Added borrower {$user_id} successfully");
         return redirect()->back();
+    }
+
+    public function returnBook(Request $request)
+    {
+
     }
 
     public function showTransactionHistory()
@@ -175,7 +200,7 @@ class AdminController extends Controller
             return redirect()->back();
         }
 
-        $this->addBorrower($request, true);
+        $this->saveAddedBorrower($request, true);
         Reservation::where('id', $reservation_id)
             ->update([
                 'reservation_status_id' => 2

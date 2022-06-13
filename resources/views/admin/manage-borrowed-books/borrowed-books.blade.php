@@ -40,7 +40,7 @@
 
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="borrowed_books_table">
                         @foreach($borrowed_books as $book)
                             <tr>
                                 <td>{{$book->book_id}}</td>
@@ -68,9 +68,26 @@
 
             });
 
+            $('#borrowed_books_table tbody').on('click', 'tr', function () {
+                //mark or unmark as selected, highlights row
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                } else {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+
+                }
+            });
+
             $('#add-borrower-btn').click(function () {
-                const id = book_id;
-                window.location.href=`/add-borrower/{id}`;
+                window.location.href=`/add-borrower`;
+                // //get row data, you can access it like an array
+                // const row_data = table.row( '.selected' ).data();
+                // window.location.href = `/cancel-book-reservation/${row_data[0]}`;
+            });
+            $('#returned-btn').click(function () {
+                const row_data = table.row('.selected').data();
+                window.location.href=`/add-borrower/${row_data[0]}`;
                 // //get row data, you can access it like an array
                 // const row_data = table.row( '.selected' ).data();
                 // window.location.href = `/cancel-book-reservation/${row_data[0]}`;

@@ -43,7 +43,9 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/change-user-status/{id}', [AdminController::class, 'changeUserStatus'])->name('change-user-status');
 //manage borrowers
     Route::get('/manage-borrowed-books', [AdminController::class, 'showManageBorrowedBooks'])->name('manage-borrowed-books');
-    Route::get('/add-borrower/{id}', [AdminController::class, 'addBorrower']);
+    Route::get('/add-borrower', [AdminController::class, 'addBorrower']);
+    Route::post('/save-added-borrower', [AdminController::class, 'saveAddedBorrower']);
+    Route::get('/return-book/{id}', [AdminController::class, 'returnBook']);
 //manage books
     Route::get('/manage-books', [AdminController::class, 'showBooks'])->name('manage-books');
     Route::get('/create-book', [AdminController::class, 'createBook'])->name('create-book');
