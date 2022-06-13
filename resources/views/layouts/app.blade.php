@@ -76,13 +76,14 @@
                     <a id="txtBtn" class="nav-link" href="{{ route('books') }}"><span class="bi-journals"></span>{{ __(' Books') }}</a>
                     <a id="txtBtn" class="nav-link" href="{{ route('login') }}"><span class="bi-check-all"></span>{{ __(' Borrowed Books') }}</a>
                     <a id="txtBtn" class="nav-link" href="{{ route('reserved-books') }}"><span class="bi-hand-thumbs-up"></span>{{ __(' Reserved Books') }}</a>
-                    <a id="txtBtn" class="nav-link" href="{{ route('login') }}"><span class="bi-clock-history"></span>{{ __(' Transaction History') }}</a>
+{{--                    <a id="txtBtn" class="nav-link" href="{{ route('login') }}"><span class="bi-clock-history"></span>{{ __(' Transaction History') }}</a>--}}
                 @endif
 
                 <!-- ADMIN'S PAGE-->
                 @if(Auth::user()->hasRole('admin'))
                     <a id="txtBtn" class="nav-link" href="{{ route('admin') }}"><span class="bi-house"></span>{{ __(' Home') }}</a>
                     <a id="txtBtn" class="nav-link" href="{{ route('manage-users') }}"><span class="bi-gear"></span>{{ __(' Manage Users') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('manage-books') }}"><span class="bi-gear"></span>{{ __(' Manage Books') }}</a>
                     <a id="txtBtn" class="nav-link" href="{{ route('login') }}"><span class="bi-journal-code"></span>{{ __(' Manage Borrowed Books') }}</a>
                     <a id="txtBtn" class="nav-link"
                        href="{{ route('manage-reserved-books') }}"><span class="bi-journal-check"></span>{{ __(' Manage Reserved Books') }}</a>
