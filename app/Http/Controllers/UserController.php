@@ -94,12 +94,26 @@ class UserController extends Controller
             ->whereIn('reservation_status_id', array(1, 3, 4))
             ->first();
 
-        $remaining_copy = Book::find($book_id)->remaining_copies;
+//        if user has reached reservation limit, return
 //        if remaining copy <= 0, return
 //        if reservation exists and already accepted , return
 //        if reservation exists, decrement and update status to accepted
 //        else, decrement and create new reservation
 
+        $reservation_limit = 3;
+        $reservation_count = DB::table('reservations')
+            ->leftjoin('users', 'reservations.user_id', '=', 'users.id')
+            ->where('reservations.user_id', '=', $user_id)
+            ->where('reservations.reservation_status_id', '=', 1)
+            ->groupBy('reservations.user_id')
+            ->count();
+
+        if ($reservation_count >= $reservation_limit) {
+            $request->session()->flash('error', "You have reached the reservation limit of {$reservation_limit} .");
+            return redirect()->back();
+        }
+
+        $remaining_copy = Book::find($book_id)->remaining_copies;
         if ($remaining_copy <= 0) {
             $request->session()->flash('error', 'No more copies remaining.');
 
