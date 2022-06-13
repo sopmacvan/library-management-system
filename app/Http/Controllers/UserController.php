@@ -22,7 +22,7 @@ class UserController extends Controller
 
         $borrowed_books = DB::table('loans')
             ->join('books', 'loans.book_id', '=', 'books.id')
-            ->select('books.id','books.title', DB::raw('count(1) as total'))
+            ->select('books.id', 'books.title', DB::raw('count(1) as total'))
             ->whereNull('loans.returned_date')
             ->groupBy('books.id', 'books.title')
             ->orderBy('total', 'DESC')
@@ -48,14 +48,18 @@ class UserController extends Controller
 
     // Borrowed Books method from route get('/borrowed-books')
     // Added by James
-    public function showBorrowedBooks ()
+    public function showBorrowedBooks()
     {
-        $borrowed_books = DB::table('books')
-        ->join('loans', 'books.id', '=', 'loans.book_id')
-        ->select('books.id', 'books.title', 'loans.loan_date', 'loans.expected_return_date')
-        ->whereNull('loans.returned_date')
-        ->get();
-
+        $user_id = Auth::user()->id;
+        $borrowed_books = DB::table('loans')
+            ->leftjoin('books', 'loans.book_id', '=', 'books.id')
+            ->select('loans.book_id',
+                'books.title',
+                'loans.loan_date', 'loans.expected_return_date')
+            ->where('loans.user_id', '=', $user_id)
+            ->whereNull('loans.returned_date')
+            ->whereNull('loans.deleted_at')
+            ->get();
         return view('user.borrowed-books', compact('borrowed_books'));
     }
 
@@ -147,5 +151,19 @@ class UserController extends Controller
 
         return redirect()->back();
 
+    }
+
+    public function showTransactionHistory()
+    {
+        $user_id = Auth::user()->id;
+        $transactions = DB::table('loans')
+            ->join('books', 'loans.book_id', '=', 'books.id')
+            ->join('users', 'loans.user_id', '=', 'users.id')
+            ->select('books.title', 'users.name', 'users.email', 'loans.book_id', 'loans.user_id',
+                'loans.loan_date', 'loans.expected_return_date', 'loans.returned_date')
+            ->where('loans.user_id', '=', $user_id)
+            ->get();
+
+        return view('admin.transaction-history', compact('transactions'));
     }
 }

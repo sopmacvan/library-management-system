@@ -76,7 +76,7 @@
                     <a id="txtBtn" class="nav-link" href="{{ route('books') }}"><span class="bi-journals"></span>{{ __(' Books') }}</a>
                     <a id="txtBtn" class="nav-link" href="{{ route('borrowed-books') }}"><span class="bi-check-all"></span>{{ __(' Borrowed Books') }}</a>
                     <a id="txtBtn" class="nav-link" href="{{ route('reserved-books') }}"><span class="bi-hand-thumbs-up"></span>{{ __(' Reserved Books') }}</a>
-                    <a id="txtBtn" class="nav-link" href="{{ route('login') }}"><span class="bi-clock-history"></span>{{ __(' Transaction History') }}</a>
+                    <a id="txtBtn" class="nav-link" href="{{ route('user-transaction-history') }}"><span class="bi-clock-history"></span>{{ __(' Transaction History') }}</a>
                 @endif
 
                 <!-- ADMIN'S PAGE-->

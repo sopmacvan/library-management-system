@@ -60,23 +60,17 @@
 
             });
 
-            // $('#reserved_books_table tbody').on('click', 'tr', function () {
-            //     //mark or unmark as selected, highlights row
-            //     if ($(this).hasClass('selected')) {
-            //         $(this).removeClass('selected');
-            //     } else {
-            //         table.$('tr.selected').removeClass('selected');
-            //         $(this).addClass('selected');
+            $('#borrowed_books_table tbody').on('click', 'tr', function () {
+                //mark or unmark as selected, highlights row
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                } else {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
 
-            //     }
-            // });
+                }
+            });
 
-            // $('#cancel_btn').click(function () {
-            //     //get row data, you can access it like an array
-            //     const row_data = table.row( '.selected' ).data();
-            //     //redirect to /cancel-book-reservation/{id}
-            //     window.location.href = `/cancel-book-reservation/${row_data[0]}`;
-            // });
         });
     </script>
 @endsection

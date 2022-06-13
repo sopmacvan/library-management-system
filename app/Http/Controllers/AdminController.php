@@ -114,10 +114,16 @@ class AdminController extends Controller
             $request->session()->flash('error', "User {$user_id} does not exist.");
         } else if (!$book) {
             $request->session()->flash('error', "Book {$book_id} does not exist");
-        } //        check if user is an admin
+        }
+        //        check if user is an admin
         else if ($user->hasRole('admin')) {
             $request->session()->flash('error', "Only non-admin users can borrow a book");
-        } else {
+        }
+        else if ($book->remaining_copies <= 0){
+            $request->session()->flash('error', 'No more copies remaining.');
+        }
+
+        else {
             Loan::create([
                 'book_id' => $book_id,
                 'user_id' => $user_id,
@@ -142,11 +148,22 @@ class AdminController extends Controller
         $loan = Loan::find($request->id);
         $book = Book::find($loan->book_id);
 
-
+// create a new record, which has returned date
+         Loan::create([
+            'book_id' => $loan->book_id,
+            'user_id' => $loan->user_id,
+            'loan_date' => $loan->loan_date,
+            'expected_return_date' => $loan->expected_return_date,
+             'returned_date' => Carbon::now()->format('Y-m-d'),
+        ]);
 
 //        delete from loans table and increment book remaining copy
         $loan->delete();
         $book->remaining_copies += 1;
+
+        $request->session()->flash('message', "Returned book {$book->id} successfully.");
+
+        return redirect()->back();
     }
 
     public function showTransactionHistory()

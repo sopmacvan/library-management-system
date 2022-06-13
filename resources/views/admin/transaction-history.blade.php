@@ -68,6 +68,16 @@
                 "scrollY": "450px",
 
             });
+            $('#transaction-history-table tbody').on('click', 'tr', function () {
+                //mark or unmark as selected, highlights row
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                } else {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+
+                }
+            });
 
             $('#add-borrower-btn').click(function () {
                 const id = book_id;

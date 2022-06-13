@@ -33,6 +33,7 @@ Route::middleware(['role:user'])->group(function () {
     Route::get('/reserved-books', [UserController::class, 'showReservedBooks'])->name('reserved-books');
     Route::get('/create-book-reservation/{id}', [UserController::class, 'createBookReservation'])->name('create-book-reservation');
 
+    Route::get('/user-transaction-history', [UserController::class, 'showTransactionHistory'])->name('user-transaction-history');
 });
 Route::middleware(['role:admin'])->group(function () {
     //    if user has the role 'admin', he can access these routes.
