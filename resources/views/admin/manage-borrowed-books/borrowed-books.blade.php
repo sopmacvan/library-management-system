@@ -30,6 +30,7 @@
                     <table id="manage_borrowed_books_table">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Book ID</th>
                             <th>Title</th>
                             <th>User ID</th>
@@ -40,12 +41,13 @@
 
                         </tr>
                         </thead>
-                        <tbody id="borrowed_books_table">
+                        <tbody>
                         @foreach($borrowed_books as $book)
                             <tr>
+                                <td>{{$book->id}}</td>
                                 <td>{{$book->book_id}}</td>
                                 <td>{{$book->title}}</td>
-                                <td>{{$book->id}}</td>
+                                <td>{{$book->user_id}}</td>
                                 <td>{{$book->name}}</td>
                                 <td>{{$book->email}}</td>
                                 <td>{{$book->loan_date}}</td>
@@ -68,7 +70,7 @@
 
             });
 
-            $('#borrowed_books_table tbody').on('click', 'tr', function () {
+            $('#manage_borrowed_books_table tbody').on('click', 'tr', function () {
                 //mark or unmark as selected, highlights row
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
@@ -87,24 +89,11 @@
             });
             $('#returned-btn').click(function () {
                 const row_data = table.row('.selected').data();
-                window.location.href=`/add-borrower/${row_data[0]}`;
+                window.location.href=`/return-book/${row_data[0]}`;
                 // //get row data, you can access it like an array
                 // const row_data = table.row( '.selected' ).data();
                 // window.location.href = `/cancel-book-reservation/${row_data[0]}`;
             });
-
-
-            // $('#reserved_books_table tbody').on('click', 'tr', function () {
-            //     //mark or unmark as selected, highlights row
-            //     if ($(this).hasClass('selected')) {
-            //         $(this).removeClass('selected');
-            //     } else {
-            //         table.$('tr.selected').removeClass('selected');
-            //         $(this).addClass('selected');
-
-            //     }
-            // });
-
 
         });
     </script>

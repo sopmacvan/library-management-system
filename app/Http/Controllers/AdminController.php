@@ -71,9 +71,9 @@ class AdminController extends Controller
         $borrowed_books = DB::table('loans')
             ->join('users', 'loans.user_id', '=', 'users.id')
             ->join('books', 'loans.book_id', '=', 'books.id')
-            ->select('reservations.book_id',
+            ->select('loans.id', 'loans.book_id', 'loans.user_id',
                 'books.title',
-                'users.id', 'users.name', 'users.email',
+                'users.name', 'users.email',
                 'loans.loan_date', 'loans.expected_return_date')
             ->whereNull('loans.deleted_at')
             // ->where('loans.return_date', '=', 'null')
@@ -112,11 +112,9 @@ class AdminController extends Controller
 //        check if user and book does not exist
         if (!$user) {
             $request->session()->flash('error', "User {$user_id} does not exist.");
-        }
-        else if (!$book) {
+        } else if (!$book) {
             $request->session()->flash('error', "Book {$book_id} does not exist");
-        }
-//        check if user is an admin
+        } //        check if user is an admin
         else if ($user->hasRole('admin')) {
             $request->session()->flash('error', "Only non-admin users can borrow a book");
         } else {
@@ -126,6 +124,10 @@ class AdminController extends Controller
                 'loan_date' => Carbon::now()->format('Y-m-d'),
                 'expected_return_date' => Carbon::now()->addDay(14)->format('Y-m-d'),
             ]);
+
+//decrement remainining copy
+            $book->remaining_copies -= 1;
+            $book->save();
 
             $request->session()->flash('message', "Added borrower {$user_id} successfully");
             return redirect('/manage-borrowed-books');
@@ -137,7 +139,14 @@ class AdminController extends Controller
 
     public function returnBook(Request $request)
     {
+        $loan = Loan::find($request->id);
+        $book = Book::find($loan->book_id);
 
+
+
+//        delete from loans table and increment book remaining copy
+        $loan->delete();
+        $book->remaining_copies += 1;
     }
 
     public function showTransactionHistory()
