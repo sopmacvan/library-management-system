@@ -110,25 +110,40 @@ class AdminController extends Controller
         $book_id = $request->book_id;
         $user = User::find($user_id);
         $book = Book::find($book_id);
-//        check if user and book does not exist
+//        check if user does not exist
         if (!$user) {
             $request->session()->flash('error', "User {$user_id} does not exist.");
             return redirect()->back();
-
+//check if book does not exist
         }
         if (!$book) {
             $request->session()->flash('error', "Book {$book_id} does not exist");
             return redirect()->back();
-
-        } //        check if user is an admin
+        }
+        //        check if user is an admin
         if ($user->hasRole('admin')) {
             $request->session()->flash('error', "Only non-admin users can borrow a book");
             return redirect()->back();
         }
+
+//        check if user already borrowed this book
+        $loan = Loan::where('user_id', $user_id)
+            ->where('book_id', $book_id)
+            ->whereNull('returned_date')
+            ->whereNull('deleted_at')
+            ->first();
+        if ($loan) {
+            $request->session()->flash('error', "User has already borrowed this book.");
+            return redirect()->back();
+
+        }
+
+//        check if there are still copies remainining
         if ($book->remaining_copies <= 0) {
             $request->session()->flash('error', 'No more copies remaining.');
             return redirect()->back();
         }
+
 
         $borrow_limit = 3;
         $borrow_count = DB::table('loans')
@@ -140,7 +155,7 @@ class AdminController extends Controller
             ->groupBy('loans.user_id')
             ->first()
             ->total;
-
+//check if user has reached borrow limit
         if ($borrow_count >= $borrow_limit) {
             $request->session()->flash('error', "User has reached max borrow limit of {$borrow_limit}.");
             return redirect()->back();
@@ -181,6 +196,7 @@ class AdminController extends Controller
 //        delete from loans table and increment book remaining copy
         $loan->delete();
         $book->remaining_copies += 1;
+        $book->save();
 
         $request->session()->flash('message', "Returned book {$book->id} successfully.");
 
